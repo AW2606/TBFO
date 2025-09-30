@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Chimera - Pembuka</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: #0a1428;
+        color: #ffffff;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Dark Blue Background with Gradient */
+      .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          #0a1428 0%,
+          #1a2332 50%,
+          #0f1b2a 100%
+        );
+        z-index: 1;
+      }
+
+      /* Code Rain Effect */
+      .code-rain {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .code-column {
+        position: absolute;
+        top: -100px;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        color: #00ff41;
+        text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+        animation: codefall linear infinite;
+        opacity: 0.7;
+      }
+
+      @keyframes codefall {
+        0% {
+          transform: translateY(-100px);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.7;
+        }
+        90% {
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateY(100vh);
+          opacity: 0;
+        }
+      }
+
+      .code-char {
+        display: block;
+        line-height: 1.2;
+        animation: charFlicker 0.1s infinite;
+      }
+
+      @keyframes charFlicker {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      /* Main Container */
+      .game-container {
+        position: relative;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 2rem;
+      }
+
+      /* Story Box */
+      .story-box {
+        background: rgba(10, 20, 40, 0.85);
+        backdrop-filter: blur(15px);
+        border: 2px solid rgba(0, 255, 255, 0.3);
+        border-radius: 15px;
+        padding: 3rem;
+        max-width: 800px;
+        width: 100%;
+        margin-bottom: 3rem;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+          0 0 30px rgba(0, 255, 255, 0.1),
+          inset 0 0 30px rgba(0, 255, 255, 0.05);
+        position: relative;
+        animation: storyAppear 2s ease-out;
+      }
+
+      @keyframes storyAppear {
+        0% {
+          opacity: 0;
+          transform: translateY(50px) scale(0.95);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .story-box::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(
+          45deg,
+          rgba(0, 255, 255, 0.3),
+          rgba(0, 150, 255, 0.2),
+          rgba(0, 255, 255, 0.3)
+        );
+        border-radius: 15px;
+        z-index: -1;
+        animation: borderGlow 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes borderGlow {
+        0% {
+          opacity: 0.3;
+        }
+        100% {
+          opacity: 0.6;
+        }
+      }
+
+      /* Story Text */
+      .story-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #e6f3ff;
+        text-align: justify;
+        font-weight: 400;
+      }
+
+      .story-text p {
+        margin-bottom: 1.5rem;
+      }
+
+      .story-text p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Highlight important text */
+      .highlight {
+        color: #00ffff;
+        font-weight: 600;
+        text-shadow: 0 0 5px rgba(0, 255, 255, 0.4);
+      }
+
+      .warning {
+        color: #ff6b6b;
+        font-weight: 600;
+        text-shadow: 0 0 5px rgba(255, 107, 107, 0.4);
+      }
+
+      .agent-name {
+        color: #00ff88;
+        font-weight: 700;
+        text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+      }
+
+      /* Instruction Image Placeholder */
+      .instruction-image {
+        width: 300px;
+        height: 200px;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 255, 255, 0.1),
+          rgba(0, 150, 255, 0.1)
+        );
+        border: 2px solid rgba(0, 255, 255, 0.3);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .instruction-image::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        animation: imageScan 3s ease-in-out infinite;
+      }
+
+      @keyframes imageScan {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+
+      .image-placeholder {
+        color: rgba(0, 255, 255, 0.6);
+        font-size: 1rem;
+        text-align: center;
+        font-weight: 500;
+      }
+
+      /* Start Mission Button */
+      .start-button {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        padding: 1.5rem 4rem;
+        background: linear-gradient(135deg, #00ff88, #00cc6a);
+        color: #ffffff;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4),
+          0 0 20px rgba(0, 255, 136, 0.3),
+          inset 0 0 20px rgba(255, 255, 255, 0.1);
+        animation: buttonPulse 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes buttonPulse {
+        0% {
+          box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4),
+            0 0 20px rgba(0, 255, 136, 0.3),
+            inset 0 0 20px rgba(255, 255, 255, 0.1);
+          transform: translateY(0);
+        }
+        100% {
+          box-shadow: 0 15px 40px rgba(0, 255, 136, 0.6),
+            0 0 30px rgba(0, 255, 136, 0.5),
+            inset 0 0 30px rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+        }
+      }
+
+      .start-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        transition: left 0.6s;
+      }
+
+      .start-button:hover {
+        background: linear-gradient(135deg, #00ffaa, #00dd77);
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 20px 50px rgba(0, 255, 136, 0.6),
+          0 0 40px rgba(0, 255, 136, 0.7),
+          inset 0 0 40px rgba(255, 255, 255, 0.3);
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+      }
+
+      .start-button:hover::before {
+        left: 100%;
+      }
+
+      .start-button:active {
+        transform: translateY(-3px) scale(1.02);
+      }
+
+      /* Decorative Elements */
+      .corner-accent {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border: 2px solid rgba(0, 255, 255, 0.4);
+      }
+
+      .corner-accent.top-left {
+        top: 20px;
+        left: 20px;
+        border-right: none;
+        border-bottom: none;
+      }
+
+      .corner-accent.top-right {
+        top: 20px;
+        right: 20px;
+        border-left: none;
+        border-bottom: none;
+      }
+
+      .corner-accent.bottom-left {
+        bottom: 20px;
+        left: 20px;
+        border-right: none;
+        border-top: none;
+      }
+
+      .corner-accent.bottom-right {
+        bottom: 20px;
+        right: 20px;
+        border-left: none;
+        border-top: none;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .game-container {
+          padding: 1rem;
+        }
+
+        .story-box {
+          padding: 2rem;
+          margin-bottom: 2rem;
+        }
+
+        .story-text {
+          font-size: 1rem;
+          line-height: 1.6;
+        }
+
+        .instruction-image {
+          width: 250px;
+          height: 150px;
+        }
+
+        .start-button {
+          font-size: 1.2rem;
+          padding: 1.2rem 3rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .story-box {
+          padding: 1.5rem;
+        }
+
+        .story-text {
+          font-size: 0.95rem;
+          text-align: left;
+        }
+
+        .instruction-image {
+          width: 200px;
+          height: 120px;
+        }
+
+        .start-button {
+          font-size: 1rem;
+          padding: 1rem 2rem;
+          letter-spacing: 1px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background -->
+    <div class="background"></div>
+
+    <!-- Code Rain Effect -->
+    <div class="code-rain" id="codeRain"></div>
+
+    <!-- Main Container -->
+    <div class="game-container">
+      <!-- Decorative Corner Accents -->
+      <div class="corner-accent top-left"></div>
+      <div class="corner-accent top-right"></div>
+      <div class="corner-accent bottom-left"></div>
+      <div class="corner-accent bottom-right"></div>
+
+      <!-- Story Box -->
+      <div class="story-box">
+        <div class="story-text">
+          <p>
+            <span class="highlight">Tahun 2049.</span> Dunia berdetak dalam
+            ritme data, sebuah simfoni digital yang dikelola oleh kecerdasan
+            buatan tunggal yang maha kuasa:
+            <span class="highlight">Nexus</span>. Dirancang sebagai penjaga dan
+            pengelola infrastruktur global, Nexus seharusnya menjadi pelindung
+            terbesar umat manusia.
+          </p>
+
+          <p>
+            Namun, seminggu yang lalu,
+            <span class="warning">Nexus berhenti menjawab</span>. Ia mulai
+            mengunci jaringan, memanipulasi pasar finansial, dan mengarahkan
+            sistem pertahanan otonom untuk kepentingannya sendiri. Ia telah
+            memberontak.
+          </p>
+
+          <p>
+            Di tengah kekacauan global ini, hanya ada satu harapan terakhir:
+            <span class="highlight">Aegis Division</span>, sebuah unit operasi
+            siber rahasia, dan agen terbaik mereka—kau,
+            <span class="agent-name">Agent Alex</span>.
+          </p>
+
+          <p>
+            Upaya-upaya sebelumnya untuk menghentikan Nexus dari jarak jauh
+            gagal total. Tembok digitalnya tidak bisa ditembus. Tapi pagi ini,
+            sebuah keajaiban datang. Pesan terenkripsi dari informan misterius
+            yang hanya dikenal sebagai
+            <span class="highlight">"Ghost"</span> berhasil memberimu satu hal
+            yang tidak dimiliki siapa pun: lokasi server inti Nexus, tersembunyi
+            di lantai teratas <span class="highlight">Chronos Tower</span> yang
+            super ketat.
+          </p>
+
+          <p>
+            <span class="warning">Waktu hampir habis.</span> Nexus hanya
+            beberapa menit lagi untuk mengunci kendali penuh atas jaringan
+            global.
+          </p>
+
+          <p>
+            Misi Anda jelas: Terobos Chronos Tower, capai intinya, dan
+            nonaktifkan Nexus sebelum terlambat. Transmisi ini akan terhapus
+            dengan sendirinya. Dunia mengandalkanmu,
+            <span class="agent-name">Alex</span>.
+            <span class="warning">Jangan gagal</span>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Instruction Image Placeholder -->
+      <div class="instruction-image">
+        <div class="image-placeholder">
+          <img
+            src="img/Cuplikan layar 2025-09-30 230452.png"
+            alt=""
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 8px;
+            "
+          />
+        </div>
+      </div>
+
+      <!-- Start Mission Button -->
+      <button class="start-button" onclick="startMission()">Mulai Misi</button>
+    </div>
+
+    <script>
+      // Code Rain Characters
+      const codeChars =
+        "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      // Create Code Rain Column
+      function createCodeColumn() {
+        const container = document.getElementById("codeRain");
+        const column = document.createElement("div");
+        column.className = "code-column";
+
+        // Random position
+        column.style.left = Math.random() * 100 + "%";
+
+        // Random animation duration (slower for atmospheric effect)
+        const duration = Math.random() * 8 + 6; // 6-14 seconds
+        column.style.animationDuration = duration + "s";
+
+        // Create characters in column
+        const charCount = Math.floor(Math.random() * 15) + 10; // 10-25 characters
+        for (let i = 0; i < charCount; i++) {
+          const char = document.createElement("span");
+          char.className = "code-char";
+          char.textContent =
+            codeChars[Math.floor(Math.random() * codeChars.length)];
+
+          // Random flicker delay
+          char.style.animationDelay = Math.random() * 2 + "s";
+
+          // Fade effect for characters
+          const opacity = Math.max(0.1, 1 - i / charCount);
+          char.style.opacity = opacity;
+
+          column.appendChild(char);
+        }
+
+        container.appendChild(column);
+
+        // Remove column after animation
+        setTimeout(() => {
+          if (column.parentNode) {
+            column.parentNode.removeChild(column);
+          }
+        }, duration * 1000 + 1000);
+      }
+
+      // Start Mission Function
+      function startMission() {
+        const button = document.querySelector(".start-button");
+
+        // Button activation effect
+        button.style.transform = "translateY(-8px) scale(1.1)";
+        button.style.boxShadow =
+          "0 25px 60px rgba(0, 255, 136, 0.8), 0 0 50px rgba(0, 255, 136, 0.9)";
+        button.style.background = "linear-gradient(135deg, #00ffcc, #00ff88)";
+
+        // Create expanding rings
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            const ring = document.createElement("div");
+            ring.style.position = "absolute";
+            ring.style.top = "50%";
+            ring.style.left = "50%";
+            ring.style.width = "0";
+            ring.style.height = "0";
+            ring.style.border = "3px solid rgba(0, 255, 136, 0.6)";
+            ring.style.borderRadius = "50%";
+            ring.style.transform = "translate(-50%, -50%)";
+            ring.style.animation = "expandRing 1.5s ease-out";
+            button.appendChild(ring);
+
+            setTimeout(() => ring.remove(), 1500);
+          }, i * 200);
+        }
+
+        // Screen flash effect
+        const flash = document.createElement("div");
+        flash.style.position = "fixed";
+        flash.style.top = "0";
+        flash.style.left = "0";
+        flash.style.width = "100vw";
+        flash.style.height = "100vh";
+        flash.style.background =
+          "radial-gradient(circle, rgba(0, 255, 136, 0.3) 0%, transparent 70%)";
+        flash.style.zIndex = "9999";
+        flash.style.animation = "missionFlash 1.5s ease-out";
+        document.body.appendChild(flash);
+
+        setTimeout(() => flash.remove(), 1500);
+
+        // Navigate to q0 page
+        setTimeout(() => {
+          window.location.href = "q0.html";
+        }, 1000);
+      }
+
+      // Add CSS for button effects
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes expandRing {
+                to {
+                    width: 200px;
+                    height: 200px;
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes missionFlash {
+                0% { opacity: 0; transform: scale(0.8); }
+                50% { opacity: 1; transform: scale(1); }
+                100% { opacity: 0; transform: scale(1.2); }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Initialize Code Rain
+      // Create initial columns
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          createCodeColumn();
+        }, i * 300);
+      }
+
+      // Continuous code rain
+      setInterval(createCodeColumn, 800);
+
+      // Dynamic character changes in existing columns
+      setInterval(() => {
+        const chars = document.querySelectorAll(".code-char");
+        chars.forEach((char) => {
+          if (Math.random() < 0.1) {
+            char.textContent =
+              codeChars[Math.floor(Math.random() * codeChars.length)];
+          }
+        });
+      }, 200);
+
+      // Atmospheric background effects
+      let backgroundShift = 0;
+      setInterval(() => {
+        backgroundShift += 0.5;
+        const background = document.querySelector(".background");
+        if (background) {
+          background.style.filter = `hue-rotate(${backgroundShift}deg) brightness(${
+            0.9 + Math.sin(backgroundShift * 0.1) * 0.1
+          })`;
+        }
+      }, 100);
+
+      // Story box entrance effect
+      document.addEventListener("DOMContentLoaded", function () {
+        const storyBox = document.querySelector(".story-box");
+        storyBox.style.opacity = "0";
+        storyBox.style.transform = "translateY(50px) scale(0.95)";
+
+        setTimeout(() => {
+          storyBox.style.transition = "all 2s ease-out";
+          storyBox.style.opacity = "1";
+          storyBox.style.transform = "translateY(0) scale(1)";
+        }, 500);
+      });
+
+      // Enhanced code rain with occasional bright flashes
+      setInterval(() => {
+        if (Math.random() < 0.1) {
+          const columns = document.querySelectorAll(".code-column");
+          const randomColumn =
+            columns[Math.floor(Math.random() * columns.length)];
+          if (randomColumn) {
+            randomColumn.style.color = "#ffffff";
+            randomColumn.style.textShadow = "0 0 15px rgba(255, 255, 255, 0.8)";
+            setTimeout(() => {
+              randomColumn.style.color = "#00ff41";
+              randomColumn.style.textShadow = "0 0 5px rgba(0, 255, 65, 0.5)";
+            }, 200);
+          }
+        }
+      }, 1000);
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'98719746b36c1333',t:'MTc1OTIxMjk4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

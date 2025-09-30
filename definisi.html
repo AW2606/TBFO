@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explanation Page - Project Chimera</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto Mono", monospace;
+        background: #0a1628;
+        color: #e0e6ed;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Blueprint Grid Background */
+      .blueprint-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #0a1628;
+        background-image: linear-gradient(
+            rgba(64, 224, 255, 0.1) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(64, 224, 255, 0.1) 1px, transparent 1px),
+          linear-gradient(rgba(64, 224, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(64, 224, 255, 0.05) 1px, transparent 1px);
+        background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+        z-index: 1;
+      }
+
+      /* Main Container */
+      .explanation-container {
+        position: relative;
+        z-index: 2;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+        min-height: 100vh;
+      }
+
+      /* Page Header */
+      .page-header {
+        text-align: center;
+        margin-bottom: 4rem;
+        position: relative;
+      }
+
+      .page-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 900;
+        color: #40e0ff;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 1rem;
+        text-shadow: 0 0 20px rgba(64, 224, 255, 0.5);
+        animation: titleGlow 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes titleGlow {
+        0% {
+          text-shadow: 0 0 20px rgba(64, 224, 255, 0.5);
+        }
+        100% {
+          text-shadow: 0 0 30px rgba(64, 224, 255, 0.8);
+        }
+      }
+
+      .title-underline {
+        width: 200px;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #40e0ff, transparent);
+        margin: 0 auto;
+        animation: underlinePulse 2s ease-in-out infinite;
+      }
+
+      @keyframes underlinePulse {
+        0%,
+        100% {
+          opacity: 0.6;
+          transform: scaleX(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scaleX(1.2);
+        }
+      }
+
+      /* Content Layout */
+      .content-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        margin-bottom: 4rem;
+      }
+
+      /* Column Styling */
+      .content-column {
+        background: rgba(16, 42, 66, 0.8);
+        border: 2px solid rgba(64, 224, 255, 0.3);
+        padding: 2.5rem;
+        backdrop-filter: blur(10px);
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .content-column::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(64, 224, 255, 0.05),
+          rgba(64, 224, 255, 0.02)
+        );
+        z-index: -1;
+      }
+
+      .column-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #40e0ff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid rgba(64, 224, 255, 0.4);
+        position: relative;
+      }
+
+      .column-title::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background: #40e0ff;
+        animation: titleAccent 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes titleAccent {
+        0% {
+          width: 50px;
+          opacity: 0.7;
+        }
+        100% {
+          width: 80px;
+          opacity: 1;
+        }
+      }
+
+      .column-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #b8c5d1;
+        font-weight: 400;
+      }
+
+      /* Technical Terms Highlighting */
+      .tech-term {
+        color: #40e0ff;
+        font-weight: 500;
+        text-shadow: 0 0 5px rgba(64, 224, 255, 0.3);
+      }
+
+      .game-term {
+        color: #ff6b6b;
+        font-weight: 500;
+        text-shadow: 0 0 5px rgba(255, 107, 107, 0.3);
+      }
+
+      /* Diagram Section */
+      .diagram-section {
+        background: rgba(16, 42, 66, 0.9);
+        border: 3px solid rgba(64, 224, 255, 0.4);
+        padding: 3rem;
+        text-align: center;
+        backdrop-filter: blur(15px);
+        position: relative;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      .diagram-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #40e0ff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 2rem;
+      }
+
+      /* State Diagram */
+      .state-diagram {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3rem;
+        margin: 2rem 0;
+      }
+
+      .state {
+        width: 80px;
+        height: 80px;
+        border: 3px solid #40e0ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #40e0ff;
+        background: rgba(64, 224, 255, 0.1);
+        box-shadow: 0 0 20px rgba(64, 224, 255, 0.3);
+        animation: statePulse 3s ease-in-out infinite alternate;
+        position: relative;
+      }
+
+      @keyframes statePulse {
+        0% {
+          box-shadow: 0 0 20px rgba(64, 224, 255, 0.3);
+          transform: scale(1);
+        }
+        100% {
+          box-shadow: 0 0 30px rgba(64, 224, 255, 0.6);
+          transform: scale(1.05);
+        }
+      }
+
+      .epsilon-arrow {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #ff6b6b;
+        animation: epsilonGlow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes epsilonGlow {
+        0% {
+          color: #ff6b6b;
+          text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+        100% {
+          color: #ff9999;
+          text-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+        }
+      }
+
+      .arrow-line {
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #ff6b6b, #ff9999);
+        position: relative;
+        animation: arrowFlow 2s linear infinite;
+      }
+
+      .arrow-line::after {
+        content: "";
+        position: absolute;
+        right: -8px;
+        top: -5px;
+        width: 0;
+        height: 0;
+        border-left: 12px solid #ff6b6b;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+      }
+
+      @keyframes arrowFlow {
+        0% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.6;
+        }
+      }
+
+      .diagram-explanation {
+        margin-top: 2rem;
+        font-size: 1rem;
+        color: #9aa5b1;
+        font-style: italic;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Decorative Elements */
+      .corner-decoration {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border: 2px solid rgba(64, 224, 255, 0.4);
+      }
+
+      .corner-decoration.top-left {
+        top: 15px;
+        left: 15px;
+        border-right: none;
+        border-bottom: none;
+      }
+
+      .corner-decoration.top-right {
+        top: 15px;
+        right: 15px;
+        border-left: none;
+        border-bottom: none;
+      }
+
+      .corner-decoration.bottom-left {
+        bottom: 15px;
+        left: 15px;
+        border-right: none;
+        border-top: none;
+      }
+
+      .corner-decoration.bottom-right {
+        bottom: 15px;
+        right: 15px;
+        border-left: none;
+        border-top: none;
+      }
+
+      /* Back Button */
+      .back-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 3rem;
+      }
+
+      .back-btn {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #40e0ff;
+        background: transparent;
+        border: 2px solid #40e0ff;
+        padding: 0.8rem 2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 0 15px rgba(64, 224, 255, 0.4),
+          inset 0 0 15px rgba(64, 224, 255, 0.1);
+        animation: backButtonPulse 2s infinite;
+      }
+
+      @keyframes backButtonPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 15px rgba(64, 224, 255, 0.4),
+            inset 0 0 15px rgba(64, 224, 255, 0.1);
+        }
+        50% {
+          box-shadow: 0 0 20px rgba(64, 224, 255, 0.6),
+            inset 0 0 20px rgba(64, 224, 255, 0.2);
+        }
+      }
+
+      .back-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(64, 224, 255, 0.3),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .back-btn:hover {
+        color: #000000;
+        background: rgba(64, 224, 255, 0.9);
+        border-color: #40e0ff;
+        box-shadow: 0 0 25px rgba(64, 224, 255, 0.8),
+          inset 0 0 25px rgba(64, 224, 255, 0.3);
+        transform: translateY(-2px);
+        text-shadow: none;
+      }
+
+      .back-btn:hover::before {
+        left: 100%;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .explanation-container {
+          padding: 2rem 1rem;
+        }
+
+        .content-layout {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+
+        .content-column {
+          padding: 2rem;
+        }
+
+        .state-diagram {
+          flex-direction: column;
+          gap: 2rem;
+        }
+
+        .epsilon-arrow {
+          transform: rotate(90deg);
+        }
+
+        .arrow-line {
+          width: 40px;
+        }
+
+        .state {
+          width: 70px;
+          height: 70px;
+          font-size: 1.1rem;
+        }
+        
+        .back-btn {
+          font-size: 1rem;
+          padding: 0.7rem 1.5rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .content-column {
+          padding: 1.5rem;
+        }
+
+        .diagram-section {
+          padding: 2rem;
+        }
+
+        .column-text {
+          font-size: 1rem;
+        }
+
+        .state {
+          width: 60px;
+          height: 60px;
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="blueprint-background"></div>
+
+    <div class="explanation-container">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">Apa Arti Pilihan ε?</h1>
+        <div class="title-underline"></div>
+      </div>
+
+      <!-- Content Layout -->
+      <div class="content-layout">
+        <!-- Left Column -->
+        <div class="content-column">
+          <div class="corner-decoration top-left"></div>
+          <div class="corner-decoration bottom-right"></div>
+
+          <h2 class="column-title">Definisi Teknis</h2>
+          <p class="column-text">
+            Dalam <span class="tech-term">teori automata</span>,
+            <span class="tech-term">ε-move</span> adalah transisi state yang
+            terjadi secara spontan, tanpa perlu membaca input (seperti '<span
+              class="tech-term"
+              >A</span
+            >' atau '<span class="tech-term">B</span>').
+          </p>
+        </div>
+
+        <!-- Right Column -->
+        <div class="content-column">
+          <div class="corner-decoration top-right"></div>
+          <div class="corner-decoration bottom-left"></div>
+
+          <h2 class="column-title">Dalam Game Ini</h2>
+          <p class="column-text">
+            Pilihan <span class="game-term">ε</span> merepresentasikan bantuan
+            <span class="game-term">"Ghost"</span>. Ia muncul bukan sebagai
+            bagian dari rencana awal, melainkan sebagai sebuah event cerita
+            spontan yang memberi Anda jalan pintas atau keuntungan sesaat.
+          </p>
+        </div>
+      </div>
+
+      <!-- Diagram Section -->
+      <div class="diagram-section">
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+
+        <h3 class="diagram-title">Visualisasi Transisi</h3>
+
+        <div class="state-diagram">
+          <div class="state">q₂</div>
+
+          <div class="epsilon-arrow">
+            <div class="arrow-line"></div>
+            <span>ε</span>
+          </div>
+
+          <div class="state">q₃</div>
+        </div>
+
+        <p class="diagram-explanation">
+          Transisi epsilon memungkinkan perpindahan dari state q₂ ke q₃ tanpa
+          memerlukan input eksternal, mencerminkan bagaimana bantuan "Ghost"
+          muncul secara spontan dalam narasi game.
+        </p>
+      </div>
+
+      <!-- Back Button -->
+      <div class="back-button">
+        <a
+          href="welcome.html"
+          class="back-btn"
+          onclick="navigateBack(event)"
+          >Kembali</a
+        >
+      </div>
+    </div>
+
+    <script>
+      // Add subtle animation effects
+      document.addEventListener("DOMContentLoaded", function () {
+        // Animate content columns on scroll
+        const columns = document.querySelectorAll(".content-column");
+        const diagram = document.querySelector(".diagram-section");
+
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.style.animation = "slideInUp 0.8s ease-out forwards";
+            }
+          });
+        }, observerOptions);
+
+        columns.forEach((column) => observer.observe(column));
+        observer.observe(diagram);
+
+        // Add hover effects to states
+        const states = document.querySelectorAll(".state");
+        states.forEach((state) => {
+          state.addEventListener("mouseenter", function () {
+            this.style.transform = "scale(1.1)";
+            this.style.boxShadow = "0 0 40px rgba(64, 224, 255, 0.8)";
+          });
+
+          state.addEventListener("mouseleave", function () {
+            this.style.transform = "scale(1)";
+            this.style.boxShadow = "0 0 20px rgba(64, 224, 255, 0.3)";
+          });
+        });
+
+        // Enhanced epsilon arrow interaction
+        const epsilonArrow = document.querySelector(".epsilon-arrow");
+        epsilonArrow.addEventListener("mouseenter", function () {
+          this.style.transform = "scale(1.1)";
+          this.style.textShadow = "0 0 25px rgba(255, 107, 107, 1)";
+        });
+
+        epsilonArrow.addEventListener("mouseleave", function () {
+          this.style.transform = "scale(1)";
+          this.style.textShadow = "0 0 10px rgba(255, 107, 107, 0.5)";
+        });
+      });
+
+      // Navigation function for back button
+      function navigateBack(event) {
+        event.preventDefault();
+
+        // Add click effect
+        const btn = event.target;
+        btn.style.transform = "translateY(-2px) scale(0.95)";
+        btn.style.boxShadow = "0 0 30px rgba(64, 224, 255, 1)";
+
+        setTimeout(() => {
+          btn.style.transform = "translateY(-2px)";
+          btn.style.boxShadow = "0 0 25px rgba(64, 224, 255, 0.8)";
+        }, 150);
+
+        // Navigate back to welcome page
+        setTimeout(() => {
+          window.location.href = "welcome.html";
+        }, 300);
+      }
+
+      // Add CSS animations
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes slideInUp {
+                0% {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Blueprint grid animation
+      let gridOffset = 0;
+      setInterval(() => {
+        gridOffset += 0.5;
+        document.querySelector(
+          ".blueprint-background"
+        ).style.backgroundPosition = \`${gridOffset}px \${gridOffset}px, \${gridOffset}px \${gridOffset}px, 0 0, 0 0`;
+      }, 100);
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a contentWindow document;
+          if (b) {
+            var d = b createElement("script");
+            d innerHTML =
+              "window __CF$cv$params={r:'9871679fb32eaa34',t:'MTc1OTIxMTAyOC4wMDAwMDA='};var a=document createElement('script');a nonce='';a src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document getElementsByTagName('head')[0] appendChild(a);";
+            b getElementsByTagName("head")[0] appendChild(d);
+          }
+        }
+        if (document body) {
+          var a = document createElement("iframe");
+          a height = 1;
+          a width = 1;
+          a style position = "absolute";
+          a style top = 0;
+          a style left = 0;
+          a style border = "none";
+          a style visibility = "hidden";
+          document body appendChild(a);
+          if ("loading" !== document readyState) c();
+          else if (window addEventListener)
+            document addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document onreadystatechange || function () {};
+            document onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document readyState &&
+                ((document onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

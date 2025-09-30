@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Chimera: The Final Minute</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto Mono", monospace;
+        background: #000000;
+        color: #00ffff;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .hero-section {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      /* Futuristic City Background */
+      .city-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          #0a192f 0%,
+          #000814 50%,
+          #000000 100%
+        );
+        z-index: 1;
+      }
+
+      .city-background::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60%;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(0, 255, 255, 0.1) 20%,
+            transparent 40%,
+            rgba(255, 0, 255, 0.1) 60%,
+            transparent 80%,
+            rgba(0, 255, 255, 0.1) 100%
+          ),
+          repeating-linear-gradient(
+            90deg,
+            rgba(0, 255, 255, 0.05) 0px,
+            rgba(0, 255, 255, 0.05) 2px,
+            transparent 2px,
+            transparent 20px,
+            rgba(255, 0, 255, 0.05) 20px,
+            rgba(255, 0, 255, 0.05) 22px,
+            transparent 22px,
+            transparent 40px
+          );
+        z-index: 1;
+      }
+
+      /* City Skyline Silhouette */
+      .city-skyline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 40%;
+        background: linear-gradient(
+          to top,
+          #000000 0%,
+          rgba(0, 0, 0, 0.8) 100%
+        );
+        z-index: 2;
+      }
+
+      .city-skyline::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: polygon(
+          0% 100%,
+          0% 60%,
+          8% 60%,
+          8% 40%,
+          15% 40%,
+          15% 70%,
+          25% 70%,
+          25% 30%,
+          35% 30%,
+          35% 80%,
+          45% 80%,
+          45% 20%,
+          55% 20%,
+          55% 75%,
+          65% 75%,
+          65% 35%,
+          75% 35%,
+          75% 65%,
+          85% 65%,
+          85% 45%,
+          95% 45%,
+          95% 85%,
+          100% 85%,
+          100% 100%
+        );
+        background-color: #000000;
+        box-shadow: 0 0 50px rgba(0, 255, 255, 0.3),
+          inset 0 0 50px rgba(255, 0, 255, 0.2);
+      }
+
+      /* Agent Silhouette */
+      .agent-silhouette {
+        position: absolute;
+        bottom: 15%;
+        right: 20%;
+        width: 200px;
+        height: 400px;
+        z-index: 3;
+        opacity: 0.9;
+      }
+
+      .agent-silhouette svg {
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
+      }
+
+      /* Digital Rain Effect */
+      .digital-rain {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 4;
+        opacity: 0.3;
+      }
+
+      .rain-column {
+        position: absolute;
+        top: -100px;
+        font-family: "Roboto Mono", monospace;
+        font-size: 14px;
+        color: #00ffff;
+        animation: fall linear infinite;
+        white-space: nowrap;
+        text-shadow: 0 0 5px rgba(0, 255, 255, 0.8);
+      }
+
+      @keyframes fall {
+        to {
+          transform: translateY(calc(100vh + 100px));
+        }
+      }
+
+      /* Content Container */
+      .hero-content {
+        position: relative;
+        z-index: 5;
+        text-align: center;
+        max-width: 1200px;
+        padding: 0 2rem;
+      }
+
+      /* Game Title */
+      .game-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(2.5rem, 8vw, 6rem);
+        font-weight: 900;
+        color: #ff00ff;
+        text-shadow: 0 0 20px rgba(255, 0, 255, 0.8),
+          0 0 40px rgba(255, 0, 255, 0.6), 0 0 60px rgba(255, 0, 255, 0.4);
+        margin-bottom: 2rem;
+        letter-spacing: 3px;
+        line-height: 1.1;
+        animation: titleGlow 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes titleGlow {
+        0% {
+          text-shadow: 0 0 20px rgba(255, 0, 255, 0.8),
+            0 0 40px rgba(255, 0, 255, 0.6), 0 0 60px rgba(255, 0, 255, 0.4);
+        }
+        100% {
+          text-shadow: 0 0 30px rgba(255, 0, 255, 1),
+            0 0 50px rgba(255, 0, 255, 0.8), 0 0 70px rgba(255, 0, 255, 0.6);
+        }
+      }
+
+      /* Subtitle */
+      .subtitle {
+        font-family: "Roboto Mono", monospace;
+        font-size: clamp(0.9rem, 2vw, 1.2rem);
+        color: rgba(0, 255, 255, 0.8);
+        margin-bottom: 3rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        animation: subtitleFlicker 4s infinite;
+      }
+
+      @keyframes subtitleFlicker {
+        0%,
+        95%,
+        100% {
+          opacity: 0.8;
+        }
+        96%,
+        99% {
+          opacity: 0.3;
+        }
+      }
+
+      /* Mission Button */
+      .mission-btn {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #00ffff;
+        background: transparent;
+        border: 3px solid #00ffff;
+        padding: 1rem 3rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.4),
+          inset 0 0 20px rgba(0, 255, 255, 0.1);
+        animation: buttonPulse 2s infinite;
+        margin-right: 2rem;
+      }
+
+      /* Definition Button */
+      .definition-btn {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #ff00ff;
+        background: transparent;
+        border: 3px solid #ff00ff;
+        padding: 1rem 3rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 0 20px rgba(255, 0, 255, 0.4),
+          inset 0 0 20px rgba(255, 0, 255, 0.1);
+        animation: definitionButtonPulse 2s infinite;
+      }
+
+      /* Developer Button - matches Mission Button styling */
+      .dev-btn {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #00ffff;
+        background: transparent;
+        border: 3px solid #00ffff;
+        padding: 1rem 3rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.4),
+          inset 0 0 20px rgba(0, 255, 255, 0.1);
+        animation: buttonPulse 2s infinite;
+      }
+
+      @keyframes buttonPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(0, 255, 255, 0.4),
+            inset 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(0, 255, 255, 0.6),
+            inset 0 0 30px rgba(0, 255, 255, 0.2);
+        }
+      }
+
+      @keyframes definitionButtonPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(255, 0, 255, 0.4),
+            inset 0 0 20px rgba(255, 0, 255, 0.1);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(255, 0, 255, 0.6),
+            inset 0 0 30px rgba(255, 0, 255, 0.2);
+        }
+      }
+
+      .mission-btn::before,
+      .definition-btn::before,
+      .dev-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 255, 255, 0.3),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .mission-btn:hover {
+        color: #000000;
+        background: rgba(0, 255, 255, 0.9);
+        border-color: #00ffff;
+        box-shadow: 0 0 40px rgba(0, 255, 255, 0.8),
+          inset 0 0 40px rgba(0, 255, 255, 0.3);
+        transform: translateY(-3px);
+        text-shadow: none;
+      }
+
+      .definition-btn:hover {
+        color: #000000;
+        background: rgba(255, 0, 255, 0.9);
+        border-color: #ff00ff;
+        box-shadow: 0 0 40px rgba(255, 0, 255, 0.8),
+          inset 0 0 40px rgba(255, 0, 255, 0.3);
+        transform: translateY(-3px);
+        text-shadow: none;
+      }
+
+      .dev-btn:hover {
+        color: #000000;
+        background: rgba(0, 255, 255, 0.9);
+        border-color: #00ffff;
+        box-shadow: 0 0 40px rgba(0, 255, 255, 0.8),
+          inset 0 0 40px rgba(0, 255, 255, 0.3);
+        transform: translateY(-3px);
+        text-shadow: none;
+      }
+
+      .mission-btn:hover::before,
+      .definition-btn:hover::before,
+      .dev-btn:hover::before {
+        left: 100%;
+      }
+
+      /* Glitch Effect for Title */
+      .glitch {
+        position: relative;
+        display: inline-block;
+      }
+
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+      }
+
+      .glitch:hover::before {
+        animation: glitch-1 0.3s infinite;
+        color: #00ffff;
+        z-index: -1;
+        opacity: 0.8;
+      }
+
+      .glitch:hover::after {
+        animation: glitch-2 0.3s infinite;
+        color: #ff00ff;
+        z-index: -2;
+        opacity: 0.8;
+      }
+
+      @keyframes glitch-1 {
+        0%,
+        14%,
+        15%,
+        49%,
+        50%,
+        99%,
+        100% {
+          transform: translate(0);
+        }
+        15%,
+        49% {
+          transform: translate(-3px, 3px);
+        }
+      }
+
+      @keyframes glitch-2 {
+        0%,
+        20%,
+        21%,
+        62%,
+        63%,
+        99%,
+        100% {
+          transform: translate(0);
+        }
+        21%,
+        62% {
+          transform: translate(3px, -3px);
+        }
+      }
+
+      /* Atmospheric Effects */
+      .atmosphere {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+            ellipse at 30% 20%,
+            rgba(255, 0, 255, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 70% 80%,
+            rgba(0, 255, 255, 0.1) 0%,
+            transparent 50%
+          );
+        z-index: 2;
+        animation: atmosphereShift 8s ease-in-out infinite alternate;
+      }
+
+      @keyframes atmosphereShift {
+        0% {
+          opacity: 0.3;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 0.6;
+          transform: scale(1.1);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .agent-silhouette {
+          right: 10%;
+          width: 150px;
+          height: 300px;
+          bottom: 20%;
+        }
+
+        .hero-content {
+          padding: 0 1rem;
+        }
+
+        .mission-btn {
+          font-size: 1.2rem;
+          padding: 0.8rem 2rem;
+        }
+
+        .subtitle {
+          margin-bottom: 2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .agent-silhouette {
+          display: none;
+        }
+
+        .game-title {
+          margin-bottom: 1.5rem;
+        }
+
+        .mission-btn {
+          font-size: 1rem;
+          padding: 0.7rem 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero-section">
+      <!-- City Background -->
+      <div class="city-background"></div>
+      <div class="atmosphere"></div>
+      <div class="city-skyline"></div>
+
+      <!-- Agent Silhouette -->
+      <div class="agent-silhouette">
+        <svg viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient
+              id="agentGradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" style="stop-color: #000000; stop-opacity: 1" />
+              <stop
+                offset="50%"
+                style="stop-color: #0a192f; stop-opacity: 0.8"
+              />
+              <stop
+                offset="100%"
+                style="stop-color: #000000; stop-opacity: 1"
+              />
+            </linearGradient>
+          </defs>
+          <!-- Agent silhouette -->
+          <path
+            d="M100 50 C110 45, 120 50, 125 65 L130 80 C135 85, 140 90, 145 100 L150 120 C155 130, 160 140, 165 160 L170 200 C175 220, 180 240, 175 260 L170 280 C165 300, 160 320, 155 340 L150 360 C145 370, 140 380, 130 385 L120 390 C110 395, 90 395, 80 390 L70 385 C60 380, 55 370, 50 360 L45 340 C40 320, 35 300, 30 280 L25 260 C20 240, 25 220, 30 200 L35 160 C40 140, 45 130, 50 120 L55 100 C60 90, 65 85, 70 80 L75 65 C80 50, 90 45, 100 50 Z"
+            fill="url(#agentGradient)"
+            stroke="#00FFFF"
+            stroke-width="2"
+            opacity="0.9"
+          />
+          <!-- Weapon outline -->
+          <rect
+            x="160"
+            y="180"
+            width="25"
+            height="8"
+            fill="#00FFFF"
+            opacity="0.7"
+          />
+          <!-- Coat details -->
+          <path
+            d="M60 200 Q100 190, 140 200 L145 350 Q100 360, 55 350 Z"
+            fill="none"
+            stroke="#00FFFF"
+            stroke-width="1"
+            opacity="0.5"
+          />
+        </svg>
+      </div>
+
+      <!-- Digital Rain -->
+      <div class="digital-rain" id="digitalRain"></div>
+
+      <!-- Hero Content -->
+      <div class="hero-content">
+        <h1
+          class="game-title glitch"
+          data-text="PROJECT CHIMERA: THE FINAL MINUTE"
+        >
+          PROJECT CHIMERA:<br />THE FINAL MINUTE
+        </h1>
+        <p class="subtitle">
+          System Breach Detected • Mission Critical • Time Running Out
+        </p>
+        <div
+          class="button-container"
+          style="
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+          "
+        >
+          <a
+            href="#definisi"
+            class="definition-btn"
+            onclick="navigateToDefinisi(event)"
+            >DEFINISI</a
+          >
+          <a
+            href="#howtoplay"
+            class="mission-btn"
+            onclick="navigateToHowToPlay(event)"
+            >MULAI MISI</a
+          >
+          <a href="#dev" class="dev-btn" onclick="navigateToDev(event)"
+            >PENGELOLA</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Digital Rain Effect
+      function createDigitalRain() {
+        const container = document.getElementById("digitalRain");
+        const characters =
+          "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+
+        for (let i = 0; i < 30; i++) {
+          const column = document.createElement("div");
+          column.className = "rain-column";
+          column.style.left = Math.random() * 100 + "%";
+          column.style.animationDuration = Math.random() * 4 + 3 + "s";
+          column.style.animationDelay = Math.random() * 3 + "s";
+
+          let text = "";
+          const columnHeight = Math.floor(Math.random() * 15) + 10;
+          for (let j = 0; j < columnHeight; j++) {
+            text +=
+              characters.charAt(Math.floor(Math.random() * characters.length)) +
+              "<br>";
+          }
+          column.innerHTML = text;
+
+          container.appendChild(column);
+        }
+      }
+
+      // Navigation function
+      function navigateToHowToPlay(event) {
+        event.preventDefault();
+
+        // Add click effect
+        const btn = event.target;
+        btn.style.transform = "translateY(-3px) scale(0.95)";
+        btn.style.boxShadow = "0 0 50px rgba(0, 255, 255, 1)";
+
+        setTimeout(() => {
+          btn.style.transform = "translateY(-3px)";
+          btn.style.boxShadow = "0 0 40px rgba(0, 255, 255, 0.8)";
+        }, 150);
+
+        // Navigate to HowToPlay page
+        setTimeout(() => {
+          window.location.href = "howtoplay.html";
+        }, 300);
+      }
+
+      // Navigation function for Definisi
+      function navigateToDefinisi(event) {
+        event.preventDefault();
+
+        // Add click effect
+        const btn = event.target;
+        btn.style.transform = "translateY(-3px) scale(0.95)";
+        btn.style.boxShadow = "0 0 50px rgba(255, 0, 255, 1)";
+
+        setTimeout(() => {
+          btn.style.transform = "translateY(-3px)";
+          btn.style.boxShadow = "0 0 40px rgba(255, 0, 255, 0.8)";
+        }, 150);
+
+        // Navigate to Definisi page
+        setTimeout(() => {
+          window.location.href = "definisi.html";
+        }, 300);
+      }
+
+      // Navigation function for Developers page
+      function navigateToDev(event) {
+        event.preventDefault();
+
+        // Add click effect (similar to mission button since dev-btn has same styling)
+        const btn = event.target;
+        btn.style.transform = "translateY(-3px) scale(0.95)";
+        btn.style.boxShadow = "0 0 50px rgba(0, 255, 255, 1)";
+
+        setTimeout(() => {
+          btn.style.transform = "translateY(-3px)";
+          btn.style.boxShadow = "0 0 40px rgba(0, 255, 255, 0.8)";
+        }, 150);
+
+        // Navigate to Dev page
+        setTimeout(() => {
+          window.location.href = "dev.html";
+        }, 300);
+      }
+
+      // Initialize effects
+      createDigitalRain();
+
+      // Add atmospheric movement
+      let atmosphereOffset = 0;
+      setInterval(() => {
+        atmosphereOffset += 0.5;
+        const atmosphere = document.querySelector(".atmosphere");
+        if (atmosphere) {
+          atmosphere.style.transform = `scale(1.1) rotate(${
+            atmosphereOffset * 0.1
+          }deg)`;
+        }
+      }, 100);
+
+      // Add random glitch effect to title
+      setInterval(() => {
+        const title = document.querySelector(".game-title");
+        if (Math.random() < 0.1) {
+          // 10% chance every interval
+          title.style.animation = "none";
+          setTimeout(() => {
+            title.style.animation =
+              "titleGlow 3s ease-in-out infinite alternate";
+          }, 100);
+        }
+      }, 2000);
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'98714822514eaa34',t:'MTc1OTIwOTczOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mission Failed - Project Chimera</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto Mono", monospace;
+        background: #1a0000;
+        color: #ff4444;
+        min-height: 100vh;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Menacing Red Background */
+      .failure-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle at center,
+          #330000 0%,
+          #1a0000 50%,
+          #000000 100%
+        );
+        z-index: 1;
+        animation: backgroundThrob 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes backgroundThrob {
+        0% {
+          filter: brightness(1) hue-rotate(0deg);
+        }
+        100% {
+          filter: brightness(1.3) hue-rotate(10deg);
+        }
+      }
+
+      /* Static Noise Overlay */
+      .static-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><filter id="noise"><feTurbulence baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.5 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"/></filter></defs><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.4"/></svg>');
+        z-index: 2;
+        opacity: 0.6;
+        animation: staticFlicker 0.1s linear infinite;
+      }
+
+      @keyframes staticFlicker {
+        0% {
+          opacity: 0.6;
+          transform: translateX(0) translateY(0);
+        }
+        25% {
+          opacity: 0.8;
+          transform: translateX(2px) translateY(-1px);
+        }
+        50% {
+          opacity: 0.4;
+          transform: translateX(-1px) translateY(2px);
+        }
+        75% {
+          opacity: 0.7;
+          transform: translateX(1px) translateY(-2px);
+        }
+        100% {
+          opacity: 0.6;
+          transform: translateX(0) translateY(0);
+        }
+      }
+
+      /* Cracked Screen Overlay */
+      .cracked-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      .crack {
+        position: absolute;
+        background: linear-gradient(
+          45deg,
+          transparent 40%,
+          rgba(255, 68, 68, 0.8) 50%,
+          transparent 60%
+        );
+        opacity: 0.7;
+        animation: crackGlow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes crackGlow {
+        0% {
+          opacity: 0.7;
+          filter: brightness(1);
+        }
+        100% {
+          opacity: 1;
+          filter: brightness(1.5);
+        }
+      }
+
+      .crack-1 {
+        top: 20%;
+        left: 10%;
+        width: 300px;
+        height: 3px;
+        transform: rotate(25deg);
+      }
+
+      .crack-2 {
+        top: 60%;
+        right: 15%;
+        width: 250px;
+        height: 2px;
+        transform: rotate(-35deg);
+      }
+
+      .crack-3 {
+        top: 40%;
+        left: 30%;
+        width: 180px;
+        height: 2px;
+        transform: rotate(60deg);
+      }
+
+      .crack-4 {
+        bottom: 25%;
+        left: 20%;
+        width: 200px;
+        height: 3px;
+        transform: rotate(-15deg);
+      }
+
+      .crack-5 {
+        top: 15%;
+        right: 30%;
+        width: 150px;
+        height: 2px;
+        transform: rotate(80deg);
+      }
+
+      /* Heavy Glitch Effects */
+      .glitch-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 4;
+        pointer-events: none;
+      }
+
+      .glitch-bar {
+        position: absolute;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          #ff0000,
+          #ff4444,
+          #ff0000,
+          transparent
+        );
+        opacity: 0.8;
+        animation: glitchScan linear infinite;
+      }
+
+      @keyframes glitchScan {
+        0% {
+          top: -10px;
+          opacity: 0;
+          transform: scaleX(0.5);
+        }
+        10% {
+          opacity: 0.8;
+          transform: scaleX(1);
+        }
+        90% {
+          opacity: 0.8;
+          transform: scaleX(1);
+        }
+        100% {
+          top: 100vh;
+          opacity: 0;
+          transform: scaleX(0.5);
+        }
+      }
+
+      .glitch-bar:nth-child(1) {
+        animation-duration: 3s;
+        animation-delay: 0s;
+      }
+      .glitch-bar:nth-child(2) {
+        animation-duration: 2.5s;
+        animation-delay: 1s;
+      }
+      .glitch-bar:nth-child(3) {
+        animation-duration: 4s;
+        animation-delay: 2s;
+      }
+
+      /* Main Content Container */
+      .failure-content {
+        position: relative;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        padding: 2rem;
+      }
+
+      /* Mission Failed Text */
+      .mission-failed {
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(3rem, 8vw, 6rem);
+        font-weight: 900;
+        color: #ff0000;
+        text-transform: uppercase;
+        letter-spacing: 8px;
+        margin-bottom: 3rem;
+        position: relative;
+        text-shadow: 0 0 20px #ff0000, 0 0 40px #ff4444, 0 0 60px #ff0000;
+        animation: corruptedText 4s ease-in-out infinite;
+      }
+
+      @keyframes corruptedText {
+        0%,
+        90%,
+        100% {
+          transform: translateX(0) skewX(0deg);
+          filter: hue-rotate(0deg);
+        }
+        5% {
+          transform: translateX(-5px) skewX(-2deg);
+          filter: hue-rotate(90deg);
+        }
+        10% {
+          transform: translateX(5px) skewX(2deg);
+          filter: hue-rotate(-90deg);
+        }
+        15% {
+          transform: translateX(-2px) skewX(-1deg);
+          filter: hue-rotate(45deg);
+        }
+        20% {
+          transform: translateX(0) skewX(0deg);
+          filter: hue-rotate(0deg);
+        }
+      }
+
+      .mission-failed::before {
+        content: "MISSION FAILED";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        color: #ff4444;
+        z-index: -1;
+        animation: textGlitch 0.3s linear infinite;
+      }
+
+      @keyframes textGlitch {
+        0% {
+          transform: translateX(0);
+          opacity: 0.8;
+        }
+        20% {
+          transform: translateX(-2px);
+          opacity: 0.6;
+        }
+        40% {
+          transform: translateX(2px);
+          opacity: 0.8;
+        }
+        60% {
+          transform: translateX(-1px);
+          opacity: 0.4;
+        }
+        80% {
+          transform: translateX(1px);
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateX(0);
+          opacity: 0.8;
+        }
+      }
+
+      /* AI Nexus Taunt */
+      .ai-taunt {
+        font-family: "Roboto Mono", monospace;
+        font-size: clamp(1.2rem, 3vw, 1.8rem);
+        color: #ff6666;
+        font-weight: 500;
+        margin-bottom: 4rem;
+        max-width: 800px;
+        line-height: 1.6;
+        font-style: italic;
+        text-shadow: 0 0 15px rgba(255, 102, 102, 0.6);
+        animation: tauntPulse 3s ease-in-out infinite;
+        position: relative;
+      }
+
+      @keyframes tauntPulse {
+        0%,
+        100% {
+          opacity: 0.9;
+          transform: scale(1);
+          text-shadow: 0 0 15px rgba(255, 102, 102, 0.6);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.02);
+          text-shadow: 0 0 25px rgba(255, 102, 102, 0.9);
+        }
+      }
+
+      .ai-taunt::before {
+        content: '"';
+        font-size: 3rem;
+        position: absolute;
+        left: -2rem;
+        top: -1rem;
+        color: #ff4444;
+        opacity: 0.7;
+      }
+
+      .ai-taunt::after {
+        content: '"';
+        font-size: 3rem;
+        position: absolute;
+        right: -2rem;
+        bottom: -1rem;
+        color: #ff4444;
+        opacity: 0.7;
+      }
+
+      /* Try Again Button */
+      .try-again-btn {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        padding: 1.5rem 3rem;
+        border: 3px solid #660000;
+        background: rgba(102, 0, 0, 0.3);
+        color: #ff4444;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 0 20px rgba(102, 0, 0, 0.5),
+          inset 0 0 20px rgba(102, 0, 0, 0.2);
+        animation: buttonDimPulse 4s ease-in-out infinite;
+      }
+
+      @keyframes buttonDimPulse {
+        0%,
+        100% {
+          opacity: 0.7;
+          box-shadow: 0 0 20px rgba(102, 0, 0, 0.5),
+            inset 0 0 20px rgba(102, 0, 0, 0.2);
+        }
+        50% {
+          opacity: 0.9;
+          box-shadow: 0 0 30px rgba(102, 0, 0, 0.7),
+            inset 0 0 30px rgba(102, 0, 0, 0.3);
+        }
+      }
+
+      .try-again-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 68, 68, 0.3),
+          transparent
+        );
+        transition: left 0.6s;
+      }
+
+      /* Intense Hover Glitch Effect */
+      .try-again-btn:hover {
+        animation: buttonGlitchHover 0.2s linear infinite;
+        background: rgba(255, 68, 68, 0.4);
+        border-color: #ff4444;
+        color: #ffffff;
+        box-shadow: 0 0 50px rgba(255, 68, 68, 1),
+          inset 0 0 50px rgba(255, 68, 68, 0.3);
+        transform: translateY(-3px);
+      }
+
+      @keyframes buttonGlitchHover {
+        0% {
+          transform: translateY(-3px) translateX(0) skewX(0deg);
+          filter: hue-rotate(0deg);
+        }
+        20% {
+          transform: translateY(-3px) translateX(-2px) skewX(-1deg);
+          filter: hue-rotate(90deg);
+        }
+        40% {
+          transform: translateY(-3px) translateX(2px) skewX(1deg);
+          filter: hue-rotate(-90deg);
+        }
+        60% {
+          transform: translateY(-3px) translateX(-1px) skewX(-0.5deg);
+          filter: hue-rotate(45deg);
+        }
+        80% {
+          transform: translateY(-3px) translateX(1px) skewX(0.5deg);
+          filter: hue-rotate(-45deg);
+        }
+        100% {
+          transform: translateY(-3px) translateX(0) skewX(0deg);
+          filter: hue-rotate(0deg);
+        }
+      }
+
+      .try-again-btn:hover::before {
+        left: 100%;
+      }
+
+      /* Screen Distortion Effects */
+      .distortion-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 6;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent 0px,
+          rgba(255, 0, 0, 0.03) 2px,
+          transparent 4px
+        );
+        animation: scanlines 0.1s linear infinite;
+      }
+
+      @keyframes scanlines {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(4px);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .failure-content {
+          padding: 1rem;
+        }
+
+        .mission-failed {
+          letter-spacing: 4px;
+          margin-bottom: 2rem;
+        }
+
+        .ai-taunt {
+          margin-bottom: 3rem;
+          padding: 0 1rem;
+        }
+
+        .ai-taunt::before,
+        .ai-taunt::after {
+          display: none;
+        }
+
+        .try-again-btn {
+          padding: 1.2rem 2rem;
+          font-size: 1.2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .mission-failed {
+          letter-spacing: 2px;
+        }
+
+        .try-again-btn {
+          padding: 1rem 1.5rem;
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background Layers -->
+    <div class="failure-background"></div>
+    <div class="static-overlay"></div>
+
+    <!-- Cracked Screen Overlay -->
+    <div class="cracked-screen">
+      <div class="crack crack-1"></div>
+      <div class="crack crack-2"></div>
+      <div class="crack crack-3"></div>
+      <div class="crack crack-4"></div>
+      <div class="crack crack-5"></div>
+    </div>
+
+    <!-- Glitch Effects -->
+    <div class="glitch-overlay">
+      <div class="glitch-bar"></div>
+      <div class="glitch-bar"></div>
+      <div class="glitch-bar"></div>
+    </div>
+
+    <!-- Distortion Overlay -->
+    <div class="distortion-overlay"></div>
+
+    <!-- Main Content -->
+    <div class="failure-content">
+      <h1 class="mission-failed">Mission Failed</h1>
+
+      <p class="ai-taunt">Humans are so predictable. Welcome to my new era.</p>
+
+      <a href="#restart" class="try-again-btn" onclick="tryAgain(event)">
+        Try Again
+      </a>
+    </div>
+
+    <script>
+      // Enhanced glitch effects
+      function createRandomGlitch() {
+        const glitchOverlay = document.querySelector(".glitch-overlay");
+
+        // Random horizontal glitch bars
+        if (Math.random() < 0.3) {
+          const glitchBar = document.createElement("div");
+          glitchBar.style.position = "absolute";
+          glitchBar.style.left = "0";
+          glitchBar.style.width = "100%";
+          glitchBar.style.height = Math.random() * 8 + 2 + "px";
+          glitchBar.style.top = Math.random() * 100 + "%";
+          glitchBar.style.background = `linear-gradient(90deg, transparent, #ff0000, #ff4444, #ff0000, transparent)`;
+          glitchBar.style.opacity = Math.random() * 0.8 + 0.2;
+          glitchBar.style.animation = "glitchFlash 0.1s ease-out";
+
+          glitchOverlay.appendChild(glitchBar);
+
+          setTimeout(() => {
+            if (glitchBar.parentNode) {
+              glitchBar.parentNode.removeChild(glitchBar);
+            }
+          }, 100);
+        }
+      }
+
+      // Intense screen shake effect
+      function screenShake() {
+        const body = document.body;
+        const intensity = Math.random() * 4 + 1;
+
+        body.style.transform = `translate(${
+          Math.random() * intensity - intensity / 2
+        }px, ${Math.random() * intensity - intensity / 2}px)`;
+
+        setTimeout(() => {
+          body.style.transform = "translate(0, 0)";
+        }, 50);
+      }
+
+      // Random corruption effects
+      function corruptText() {
+        const missionText = document.querySelector(".mission-failed");
+        const originalText = "Mission Failed";
+        const corruptChars = "█▓▒░▄▀■□▪▫";
+
+        if (Math.random() < 0.1) {
+          let corruptedText = "";
+          for (let i = 0; i < originalText.length; i++) {
+            if (Math.random() < 0.3) {
+              corruptedText +=
+                corruptChars[Math.floor(Math.random() * corruptChars.length)];
+            } else {
+              corruptedText += originalText[i];
+            }
+          }
+
+          missionText.textContent = corruptedText;
+
+          setTimeout(() => {
+            missionText.textContent = originalText;
+          }, 100);
+        }
+      }
+
+      // Try Again button functionality
+      function tryAgain(event) {
+        event.preventDefault();
+
+        const btn = event.currentTarget;
+
+        // Intense button corruption effect
+        btn.style.animation = "buttonGlitchHover 0.1s linear infinite";
+        btn.style.transform = "translateY(-5px) scale(1.1)";
+        btn.style.boxShadow = "0 0 80px rgba(255, 68, 68, 1)";
+        btn.style.background = "rgba(255, 68, 68, 0.6)";
+        btn.style.color = "#000000";
+
+        // Screen flash effect
+        const flash = document.createElement("div");
+        flash.style.position = "fixed";
+        flash.style.top = "0";
+        flash.style.left = "0";
+        flash.style.width = "100vw";
+        flash.style.height = "100vh";
+        flash.style.background = "rgba(255, 0, 0, 0.8)";
+        flash.style.zIndex = "9999";
+        flash.style.animation = "flash 0.3s ease-out";
+        document.body.appendChild(flash);
+
+        setTimeout(() => flash.remove(), 300);
+
+        // Multiple screen shakes
+        for (let i = 0; i < 5; i++) {
+          setTimeout(screenShake, i * 100);
+        }
+
+        // Redirect to q0.html after effects
+        setTimeout(() => {
+          window.location.href = "q0.html";
+        }, 800);
+      }
+
+      // Add CSS for additional effects
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes glitchFlash {
+                0% { opacity: 0; transform: scaleX(0); }
+                50% { opacity: 1; transform: scaleX(1); }
+                100% { opacity: 0; transform: scaleX(0); }
+            }
+            
+            @keyframes flash {
+                0% { opacity: 0; }
+                50% { opacity: 1; }
+                100% { opacity: 0; }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Start continuous effects
+      setInterval(createRandomGlitch, 500);
+      setInterval(screenShake, 3000);
+      setInterval(corruptText, 2000);
+
+      // Enhanced static effect
+      let staticIntensity = 0.6;
+      setInterval(() => {
+        staticIntensity = 0.4 + Math.random() * 0.4;
+        document.querySelector(".static-overlay").style.opacity =
+          staticIntensity;
+      }, 100);
+
+      // Random crack intensity changes
+      setInterval(() => {
+        document.querySelectorAll(".crack").forEach((crack) => {
+          crack.style.opacity = 0.5 + Math.random() * 0.5;
+          crack.style.filter = `brightness(${0.8 + Math.random() * 0.4})`;
+        });
+      }, 1000);
+
+      // Dramatic entrance effect
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(() => {
+          for (let i = 0; i < 10; i++) {
+            setTimeout(screenShake, i * 200);
+          }
+        }, 500);
+      });
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'98716e919164aa34',t:'MTc1OTIxMTMxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

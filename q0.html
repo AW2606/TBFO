@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Q0 - Project Chimera</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto Mono", monospace;
+        background: #000000;
+        color: #00ffff;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Futuristic Lobby Background */
+      .game-scene {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+      }
+
+      .lobby-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          #0a192f 0%,
+          #001122 30%,
+          #000814 70%,
+          #000000 100%
+        );
+        z-index: 1;
+      }
+
+      /* Lobby Architecture */
+      .lobby-background::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+                /* Floor pattern */ linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(0, 255, 255, 0.1) 48%,
+            rgba(0, 255, 255, 0.3) 50%,
+            rgba(0, 255, 255, 0.1) 52%,
+            transparent 100%
+          ),
+          linear-gradient(
+            0deg,
+            transparent 0%,
+            rgba(0, 255, 255, 0.1) 48%,
+            rgba(0, 255, 255, 0.3) 50%,
+            rgba(0, 255, 255, 0.1) 52%,
+            transparent 100%
+          ),
+          /* Wall panels */
+            repeating-linear-gradient(
+              90deg,
+              rgba(255, 0, 255, 0.05) 0px,
+              rgba(255, 0, 255, 0.05) 100px,
+              rgba(0, 255, 255, 0.05) 100px,
+              rgba(0, 255, 255, 0.05) 200px
+            );
+        background-size: 50px 50px, 50px 50px, 200px 100%;
+        z-index: 1;
+      }
+
+      /* Lobby Pillars and Structure */
+      .lobby-structure {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60%;
+        z-index: 2;
+      }
+
+      .pillar {
+        position: absolute;
+        bottom: 0;
+        width: 60px;
+        height: 80%;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 255, 255, 0.2) 0%,
+          rgba(0, 255, 255, 0.1) 50%,
+          rgba(0, 0, 0, 0.8) 100%
+        );
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      }
+
+      .pillar:nth-child(1) {
+        left: 15%;
+      }
+      .pillar:nth-child(2) {
+        left: 35%;
+      }
+      .pillar:nth-child(3) {
+        right: 35%;
+      }
+      .pillar:nth-child(4) {
+        right: 15%;
+      }
+
+      /* Security Guard Silhouette */
+      .guard-silhouette {
+        position: absolute;
+        bottom: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 200px;
+        z-index: 3;
+      }
+
+      .guard-silhouette svg {
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0 0 15px rgba(255, 0, 255, 0.5));
+      }
+
+      /* Atmospheric Lighting */
+      .atmosphere {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+            ellipse at 50% 20%,
+            rgba(0, 255, 255, 0.15) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 20% 60%,
+            rgba(255, 0, 255, 0.1) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            ellipse at 80% 60%,
+            rgba(255, 0, 255, 0.1) 0%,
+            transparent 40%
+          );
+        z-index: 2;
+        animation: atmosphereShift 6s ease-in-out infinite alternate;
+      }
+
+      @keyframes atmosphereShift {
+        0% {
+          opacity: 0.4;
+        }
+        100% {
+          opacity: 0.7;
+        }
+      }
+
+      /* Game Content Container */
+      .game-content {
+        position: relative;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100vh;
+        padding: 2rem;
+      }
+
+      /* Agent Status */
+      .agent-status {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .agent-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #00ffff;
+        box-shadow: 0 0 15px #00ffff;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.7;
+          transform: scale(1.1);
+        }
+      }
+
+      .agent-name {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #00ffff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Narrative Section */
+      .narrative-section {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem 0;
+      }
+
+      .narrative-box {
+        background: rgba(10, 25, 47, 0.9);
+        border: 2px solid rgba(0, 255, 255, 0.4);
+        padding: 3rem;
+        max-width: 800px;
+        backdrop-filter: blur(15px);
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .narrative-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(0, 255, 255, 0.1),
+          rgba(255, 0, 255, 0.1)
+        );
+        opacity: 0.3;
+        z-index: -1;
+      }
+
+      .narrative-text {
+        font-family: "Roboto Mono", monospace;
+        font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+        line-height: 1.8;
+        color: #00ffff;
+        position: relative;
+        z-index: 1;
+        animation: typewriter 3s ease-in-out;
+      }
+
+      @keyframes typewriter {
+        0% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* Choice Buttons Section */
+      .choices-section {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        padding: 2rem 0;
+      }
+
+      .choice-btn {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        padding: 1.5rem 2.5rem;
+        border: 3px solid;
+        background: transparent;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: inline-block;
+        min-width: 280px;
+        text-align: center;
+      }
+
+      .choice-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .choice-btn:hover::before {
+        left: 100%;
+      }
+
+      /* Choice A - Aggressive */
+      .choice-a {
+        color: #ff00ff;
+        border-color: #ff00ff;
+        box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+      }
+
+      .choice-a:hover {
+        background: rgba(255, 0, 255, 0.2);
+        box-shadow: 0 0 30px rgba(255, 0, 255, 0.7);
+        transform: translateY(-3px);
+        border-color: #ff00ff;
+      }
+
+      /* Choice B - Stealth */
+      .choice-b {
+        color: #00ffff;
+        border-color: #00ffff;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+      }
+
+      .choice-b:hover {
+        background: rgba(0, 255, 255, 0.2);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
+        transform: translateY(-3px);
+        border-color: #00ffff;
+      }
+
+      /* Choice Labels */
+      .choice-label {
+        display: block;
+        font-size: 2rem;
+        font-weight: 900;
+        margin-bottom: 0.5rem;
+      }
+
+      .choice-text {
+        font-size: 1rem;
+        font-weight: 400;
+        opacity: 0.9;
+      }
+
+      /* Scanning Effect */
+      .scan-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #00ffff, transparent);
+        animation: scan 4s linear infinite;
+        z-index: 4;
+      }
+
+      @keyframes scan {
+        0% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh);
+          opacity: 0;
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .game-content {
+          padding: 1rem;
+        }
+
+        .narrative-box {
+          padding: 2rem;
+        }
+
+        .choices-section {
+          flex-direction: column;
+          align-items: center;
+          gap: 1.5rem;
+        }
+
+        .choice-btn {
+          min-width: 250px;
+          padding: 1.2rem 2rem;
+          font-size: 1rem;
+        }
+
+        .guard-silhouette {
+          width: 60px;
+          height: 150px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .narrative-box {
+          padding: 1.5rem;
+        }
+
+        .choice-btn {
+          min-width: 200px;
+          padding: 1rem 1.5rem;
+        }
+
+        .pillar {
+          width: 40px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-scene">
+      <!-- Background Elements -->
+      <div class="lobby-background"></div>
+      <div class="atmosphere"></div>
+
+      <!-- Lobby Structure -->
+      <div class="lobby-structure">
+        <div class="pillar"></div>
+        <div class="pillar"></div>
+        <div class="pillar"></div>
+        <div class="pillar"></div>
+      </div>
+
+      <!-- Security Guard -->
+      <div class="guard-silhouette">
+        <svg viewBox="0 0 80 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient
+              id="guardGradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" style="stop-color: #000000; stop-opacity: 1" />
+              <stop
+                offset="50%"
+                style="stop-color: #ff00ff; stop-opacity: 0.3"
+              />
+              <stop
+                offset="100%"
+                style="stop-color: #000000; stop-opacity: 1"
+              />
+            </linearGradient>
+          </defs>
+          <!-- Guard body -->
+          <rect
+            x="25"
+            y="40"
+            width="30"
+            height="80"
+            fill="url(#guardGradient)"
+            stroke="#FF00FF"
+            stroke-width="1"
+          />
+          <!-- Head -->
+          <circle
+            cx="40"
+            cy="25"
+            r="15"
+            fill="url(#guardGradient)"
+            stroke="#FF00FF"
+            stroke-width="1"
+          />
+          <!-- Arms -->
+          <rect
+            x="10"
+            y="50"
+            width="15"
+            height="40"
+            fill="url(#guardGradient)"
+            stroke="#FF00FF"
+            stroke-width="1"
+          />
+          <rect
+            x="55"
+            y="50"
+            width="15"
+            height="40"
+            fill="url(#guardGradient)"
+            stroke="#FF00FF"
+            stroke-width="1"
+          />
+          <!-- Legs -->
+          <rect
+            x="28"
+            y="120"
+            width="12"
+            height="60"
+            fill="url(#guardGradient)"
+            stroke="#FF00FF"
+            stroke-width="1"
+          />
+          <rect
+            x="42"
+            y="120"
+            width="12"
+            height="60"
+            fill="url(#guardGradient)"
+            stroke="#FF00FF"
+            stroke-width="1"
+          />
+          <!-- Weapon -->
+          <rect
+            x="70"
+            y="45"
+            width="8"
+            height="25"
+            fill="#FF00FF"
+            opacity="0.8"
+          />
+        </svg>
+      </div>
+
+      <!-- Scanning Effect -->
+      <div class="scan-line"></div>
+
+      <!-- Game Content -->
+      <div class="game-content">
+        <!-- Agent Status -->
+        <div class="agent-status">
+          <div class="agent-indicator"></div>
+          <div class="agent-name">Agent Alex</div>
+        </div>
+
+        <!-- Narrative Section -->
+        <div class="narrative-section">
+          <div class="narrative-box">
+            <p class="narrative-text">
+              Anda adalah Agent Alex. Anda tiba di lobi markas Nexus. Penjaga
+              memblokir jalan utama. Apa tindakanmu?
+            </p>
+          </div>
+        </div>
+
+        <!-- Choice Buttons -->
+        <div class="choices-section">
+          <a
+            href="#game_q2"
+            class="choice-btn choice-a"
+            onclick="makeChoice(event, 'A', 'q2.html')"
+          >
+            <span class="choice-label">A</span>
+            <span class="choice-text">Lewati penjaga dengan paksa.</span>
+          </a>
+
+          <a
+            href="#ending_fail_q1"
+            class="choice-btn choice-b"
+            onclick="makeChoice(event, 'B', 'q1.html')"
+          >
+            <span class="choice-label">B</span>
+            <span class="choice-text">Cari jalan memutar.</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Choice selection function
+      function makeChoice(event, choice, destination) {
+        event.preventDefault();
+
+        const btn = event.currentTarget;
+
+        // Add selection effect
+        btn.style.transform = "translateY(-3px) scale(0.95)";
+        btn.style.filter = "brightness(1.5)";
+
+        // Create ripple effect
+        const ripple = document.createElement("div");
+        ripple.style.position = "absolute";
+        ripple.style.top = "50%";
+        ripple.style.left = "50%";
+        ripple.style.width = "0";
+        ripple.style.height = "0";
+        ripple.style.background =
+          choice === "A" ? "rgba(255, 0, 255, 0.5)" : "rgba(0, 255, 255, 0.5)";
+        ripple.style.borderRadius = "50%";
+        ripple.style.transform = "translate(-50%, -50%)";
+        ripple.style.animation = "ripple 0.6s ease-out";
+        btn.appendChild(ripple);
+
+        setTimeout(() => {
+          btn.style.transform = "translateY(-3px)";
+          btn.style.filter = "brightness(1)";
+          ripple.remove();
+        }, 300);
+
+        // Navigate to destination page
+        setTimeout(() => {
+          window.location.href = destination;
+        }, 600);
+      }
+
+      // Add CSS for ripple animation
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes ripple {
+                to {
+                    width: 200px;
+                    height: 200px;
+                    opacity: 0;
+                }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Atmospheric effects
+      let atmosphereOffset = 0;
+      setInterval(() => {
+        atmosphereOffset += 0.3;
+        const atmosphere = document.querySelector(".atmosphere");
+        if (atmosphere) {
+          atmosphere.style.filter = `hue-rotate(${atmosphereOffset}deg)`;
+        }
+      }, 100);
+
+      // Guard animation
+      setInterval(() => {
+        const guard = document.querySelector(".guard-silhouette");
+        if (Math.random() < 0.1) {
+          // 10% chance
+          guard.style.transform = "translateX(-50%) scale(1.05)";
+          setTimeout(() => {
+            guard.style.transform = "translateX(-50%) scale(1)";
+          }, 200);
+        }
+      }, 3000);
+
+      // Pillar glow effect
+      setInterval(() => {
+        document.querySelectorAll(".pillar").forEach((pillar) => {
+          if (Math.random() < 0.2) {
+            pillar.style.boxShadow = "0 0 30px rgba(0, 255, 255, 0.4)";
+            setTimeout(() => {
+              pillar.style.boxShadow = "0 0 20px rgba(0, 255, 255, 0.2)";
+            }, 500);
+          }
+        });
+      }, 2000);
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'987151917618aa34',t:'MTc1OTIxMDEyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

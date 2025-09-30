@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Q2 - Project Chimera</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto Mono", monospace;
+        background: #000000;
+        color: #00ffff;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Server Room Background */
+      .game-scene {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+      }
+
+      .server-room-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          #001122 0%,
+          #000814 50%,
+          #000000 100%
+        );
+        z-index: 1;
+      }
+
+      /* Server Racks */
+      .server-racks {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+      }
+
+      .server-rack {
+        position: absolute;
+        width: 80px;
+        height: 60%;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 255, 255, 0.2) 0%,
+          rgba(0, 100, 100, 0.1) 100%
+        );
+        border: 1px solid rgba(0, 255, 255, 0.4);
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      }
+
+      .server-rack::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+          0deg,
+          rgba(0, 255, 255, 0.1) 0px,
+          rgba(0, 255, 255, 0.1) 8px,
+          transparent 8px,
+          transparent 12px
+        );
+      }
+
+      .server-rack:nth-child(1) {
+        left: 10%;
+        bottom: 20%;
+        animation: serverGlow1 3s infinite;
+      }
+      .server-rack:nth-child(2) {
+        left: 25%;
+        bottom: 20%;
+        animation: serverGlow2 2.5s infinite;
+      }
+      .server-rack:nth-child(3) {
+        right: 25%;
+        bottom: 20%;
+        animation: serverGlow1 2.8s infinite;
+      }
+      .server-rack:nth-child(4) {
+        right: 10%;
+        bottom: 20%;
+        animation: serverGlow2 3.2s infinite;
+      }
+
+      @keyframes serverGlow1 {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+        }
+      }
+
+      @keyframes serverGlow2 {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
+        }
+      }
+
+      /* Firewall Visualization */
+      .firewall-display {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200px;
+        height: 200px;
+        z-index: 3;
+      }
+
+      .firewall-display svg {
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.8));
+        animation: firewallPulse 2s infinite;
+      }
+
+      @keyframes firewallPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 1;
+        }
+      }
+
+      /* Data Streams */
+      .data-streams {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0.6;
+      }
+
+      .data-stream {
+        position: absolute;
+        width: 2px;
+        height: 100px;
+        background: linear-gradient(180deg, transparent, #00ffff, transparent);
+        animation: dataFlow linear infinite;
+      }
+
+      @keyframes dataFlow {
+        0% {
+          transform: translateY(-100px);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh);
+          opacity: 0;
+        }
+      }
+
+      /* Ghost Notification */
+      .ghost-notification {
+        position: absolute;
+        top: 15%;
+        right: 5%;
+        background: rgba(255, 215, 0, 0.1);
+        border: 2px solid #ffd700;
+        padding: 1rem;
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+        z-index: 4;
+        animation: ghostAppear 1s ease-out, ghostGlow 2s infinite 1s;
+        max-width: 250px;
+      }
+
+      @keyframes ghostAppear {
+        0% {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes ghostGlow {
+        0%,
+        100% {
+          box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+        }
+      }
+
+      .ghost-header {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.9rem;
+        color: #ffd700;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+      }
+
+      .ghost-message {
+        font-size: 0.8rem;
+        color: #ffd700;
+        line-height: 1.4;
+      }
+
+      /* Game Content Container */
+      .game-content {
+        position: relative;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100vh;
+        padding: 2rem;
+      }
+
+      /* Agent Status */
+      .agent-status {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .agent-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #00ffff;
+        box-shadow: 0 0 15px #00ffff;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.7;
+          transform: scale(1.1);
+        }
+      }
+
+      .agent-name {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #00ffff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Narrative Section */
+      .narrative-section {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem 0;
+      }
+
+      .narrative-box {
+        background: rgba(10, 25, 47, 0.9);
+        border: 2px solid rgba(0, 255, 255, 0.4);
+        padding: 3rem;
+        max-width: 900px;
+        backdrop-filter: blur(15px);
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .narrative-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(0, 255, 255, 0.1),
+          rgba(255, 0, 255, 0.1)
+        );
+        opacity: 0.3;
+        z-index: -1;
+      }
+
+      .narrative-text {
+        font-family: "Roboto Mono", monospace;
+        font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+        line-height: 1.8;
+        color: #00ffff;
+        position: relative;
+        z-index: 1;
+        animation: typewriter 3s ease-in-out;
+      }
+
+      @keyframes typewriter {
+        0% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* Choice Buttons Section */
+      .choices-section {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        padding: 2rem 0;
+        flex-wrap: wrap;
+      }
+
+      .choice-btn {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        padding: 1.5rem 2rem;
+        border: 3px solid;
+        background: transparent;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: inline-block;
+        min-width: 250px;
+        text-align: center;
+      }
+
+      .choice-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .choice-btn:hover::before {
+        left: 100%;
+      }
+
+      /* Choice A - Aggressive */
+      .choice-a {
+        color: #ff00ff;
+        border-color: #ff00ff;
+        box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+      }
+
+      .choice-a:hover {
+        background: rgba(255, 0, 255, 0.2);
+        box-shadow: 0 0 30px rgba(255, 0, 255, 0.7);
+        transform: translateY(-3px);
+      }
+
+      /* Choice B - Alternative */
+      .choice-b {
+        color: #00ffff;
+        border-color: #00ffff;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+      }
+
+      .choice-b:hover {
+        background: rgba(0, 255, 255, 0.2);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
+        transform: translateY(-3px);
+      }
+
+      /* Choice Epsilon - Special */
+      .choice-epsilon {
+        color: #ffd700;
+        border-color: #ffd700;
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+        animation: epsilonPulse 1.5s infinite;
+        position: relative;
+      }
+
+      .choice-epsilon::after {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #ffd700, #ffa500, #ffd700);
+        border-radius: inherit;
+        z-index: -1;
+        opacity: 0.3;
+        animation: epsilonBorder 2s linear infinite;
+      }
+
+      @keyframes epsilonPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+          transform: scale(1);
+        }
+        50% {
+          box-shadow: 0 0 40px rgba(255, 215, 0, 0.9);
+          transform: scale(1.05);
+        }
+      }
+
+      @keyframes epsilonBorder {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .choice-epsilon:hover {
+        background: rgba(255, 215, 0, 0.2);
+        box-shadow: 0 0 50px rgba(255, 215, 0, 1);
+        transform: translateY(-3px) scale(1.05);
+        color: #000000;
+      }
+
+      /* Choice Labels */
+      .choice-label {
+        display: block;
+        font-size: 1.8rem;
+        font-weight: 900;
+        margin-bottom: 0.5rem;
+      }
+
+      .choice-text {
+        font-size: 0.9rem;
+        font-weight: 400;
+        opacity: 0.9;
+      }
+
+      /* Epsilon Special Label */
+      .epsilon-label {
+        font-size: 2.5rem;
+        font-family: "Orbitron", sans-serif;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .game-content {
+          padding: 1rem;
+        }
+
+        .narrative-box {
+          padding: 2rem;
+        }
+
+        .choices-section {
+          flex-direction: column;
+          align-items: center;
+          gap: 1.5rem;
+        }
+
+        .choice-btn {
+          min-width: 220px;
+          padding: 1.2rem 1.5rem;
+          font-size: 1rem;
+        }
+
+        .ghost-notification {
+          position: relative;
+          top: auto;
+          right: auto;
+          margin-bottom: 1rem;
+          max-width: 100%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .narrative-box {
+          padding: 1.5rem;
+        }
+
+        .choice-btn {
+          min-width: 200px;
+          padding: 1rem 1.2rem;
+        }
+
+        .server-rack {
+          width: 60px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-scene">
+      <!-- Server Room Background -->
+      <div class="server-room-background"></div>
+
+      <!-- Server Racks -->
+      <div class="server-racks">
+        <div class="server-rack"></div>
+        <div class="server-rack"></div>
+        <div class="server-rack"></div>
+        <div class="server-rack"></div>
+      </div>
+
+      <!-- Firewall Display -->
+      <div class="firewall-display">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="firewallGradient" cx="50%" cy="50%" r="50%">
+              <stop
+                offset="0%"
+                style="stop-color: #ff00ff; stop-opacity: 0.8"
+              />
+              <stop
+                offset="70%"
+                style="stop-color: #ff00ff; stop-opacity: 0.4"
+              />
+              <stop
+                offset="100%"
+                style="stop-color: #ff00ff; stop-opacity: 0.1"
+              />
+            </radialGradient>
+          </defs>
+          <!-- Firewall Shield -->
+          <circle
+            cx="100"
+            cy="100"
+            r="80"
+            fill="url(#firewallGradient)"
+            stroke="#FF00FF"
+            stroke-width="3"
+          />
+          <!-- Inner patterns -->
+          <circle
+            cx="100"
+            cy="100"
+            r="60"
+            fill="none"
+            stroke="#FF00FF"
+            stroke-width="2"
+            opacity="0.6"
+          />
+          <circle
+            cx="100"
+            cy="100"
+            r="40"
+            fill="none"
+            stroke="#FF00FF"
+            stroke-width="2"
+            opacity="0.4"
+          />
+          <!-- Warning symbol -->
+          <polygon
+            points="100,60 120,120 80,120"
+            fill="#FF00FF"
+            opacity="0.8"
+          />
+          <circle cx="100" cy="135" r="5" fill="#FF00FF" />
+        </svg>
+      </div>
+
+      <!-- Data Streams -->
+      <div class="data-streams" id="dataStreams"></div>
+
+      <!-- Ghost Notification -->
+      <div class="ghost-notification">
+        <div class="ghost-header">◊ Ghost</div>
+        <div class="ghost-message">
+          Celah sistem terdeteksi! Akses darurat tersedia selama 30 detik.
+        </div>
+      </div>
+
+      <!-- Game Content -->
+      <div class="game-content">
+        <!-- Agent Status -->
+        <div class="agent-status">
+          <div class="agent-indicator"></div>
+          <div class="agent-name">Agent Alex</div>
+        </div>
+
+        <!-- Narrative Section -->
+        <div class="narrative-section">
+          <div class="narrative-box">
+            <p class="narrative-text">
+              Anda berhasil masuk ke ruang server utama. Firewall Nexus aktif di
+              depanmu. Tiba-tiba, sebuah notifikasi dari informan "Ghost" muncul
+              di layarmu, membuka sebuah celah singkat pada sistem!
+            </p>
+          </div>
+        </div>
+
+        <!-- Choice Buttons -->
+        <div class="choices-section">
+          <a
+            href="#game_q4"
+            class="choice-btn choice-a"
+            onclick="makeChoice(event, 'A', 'q4.html')"
+          >
+            <span class="choice-label">A</span>
+            <span class="choice-text">Langsung serang firewall utama.</span>
+          </a>
+
+          <a
+            href="#ending_fail_q5"
+            class="choice-btn choice-b"
+            onclick="makeChoice(event, 'B', 'q5.html')"
+          >
+            <span class="choice-label">B</span>
+            <span class="choice-text">Cari terminal cadangan.</span>
+          </a>
+
+          <a
+            href="#game_q3"
+            class="choice-btn choice-epsilon"
+            onclick="makeChoice(event, 'ε', 'q3.html')"
+          >
+            <span class="choice-label epsilon-label">ε</span>
+            <span class="choice-text">Manfaatkan celah dari "Ghost".</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Create data streams
+      function createDataStreams() {
+        const container = document.getElementById("dataStreams");
+
+        for (let i = 0; i < 15; i++) {
+          const stream = document.createElement("div");
+          stream.className = "data-stream";
+          stream.style.left = Math.random() * 100 + "%";
+          stream.style.animationDuration = Math.random() * 3 + 2 + "s";
+          stream.style.animationDelay = Math.random() * 2 + "s";
+
+          if (Math.random() > 0.5) {
+            stream.style.background =
+              "linear-gradient(180deg, transparent, #FF00FF, transparent)";
+          }
+
+          container.appendChild(stream);
+        }
+      }
+
+      // Choice selection function
+      function makeChoice(event, choice, destination) {
+        event.preventDefault();
+
+        const btn = event.currentTarget;
+
+        // Special effect for epsilon choice
+        if (choice === "ε") {
+          btn.style.transform = "translateY(-3px) scale(1.1)";
+          btn.style.boxShadow = "0 0 60px rgba(255, 215, 0, 1)";
+
+          // Create golden ripple effect
+          const ripple = document.createElement("div");
+          ripple.style.position = "absolute";
+          ripple.style.top = "50%";
+          ripple.style.left = "50%";
+          ripple.style.width = "0";
+          ripple.style.height = "0";
+          ripple.style.background = "rgba(255, 215, 0, 0.6)";
+          ripple.style.borderRadius = "50%";
+          ripple.style.transform = "translate(-50%, -50%)";
+          ripple.style.animation = "ripple 0.8s ease-out";
+          btn.appendChild(ripple);
+
+          setTimeout(() => ripple.remove(), 800);
+        } else {
+          // Standard effect for A and B choices
+          btn.style.transform = "translateY(-3px) scale(0.95)";
+          btn.style.filter = "brightness(1.5)";
+
+          const color =
+            choice === "A"
+              ? "rgba(255, 0, 255, 0.5)"
+              : "rgba(0, 255, 255, 0.5)";
+          const ripple = document.createElement("div");
+          ripple.style.position = "absolute";
+          ripple.style.top = "50%";
+          ripple.style.left = "50%";
+          ripple.style.width = "0";
+          ripple.style.height = "0";
+          ripple.style.background = color;
+          ripple.style.borderRadius = "50%";
+          ripple.style.transform = "translate(-50%, -50%)";
+          ripple.style.animation = "ripple 0.6s ease-out";
+          btn.appendChild(ripple);
+
+          setTimeout(() => {
+            btn.style.transform = "translateY(-3px)";
+            btn.style.filter = "brightness(1)";
+            ripple.remove();
+          }, 300);
+        }
+
+        // Navigate to destination page
+        setTimeout(
+          () => {
+            window.location.href = destination;
+          },
+          choice === "ε" ? 800 : 600
+        );
+      }
+
+      // Add CSS for ripple animation
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes ripple {
+                to {
+                    width: 300px;
+                    height: 300px;
+                    opacity: 0;
+                }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Initialize effects
+      createDataStreams();
+
+      // Server room ambient effects
+      setInterval(() => {
+        document.querySelectorAll(".server-rack").forEach((rack) => {
+          if (Math.random() < 0.3) {
+            const intensity = Math.random() * 0.5 + 0.3;
+            rack.style.opacity = intensity;
+            setTimeout(() => {
+              rack.style.opacity = "1";
+            }, 200);
+          }
+        });
+      }, 1500);
+
+      // Epsilon choice countdown effect
+      let epsilonTimer = 30;
+      const epsilonBtn = document.querySelector(".choice-epsilon");
+
+      const countdown = setInterval(() => {
+        epsilonTimer--;
+        if (epsilonTimer <= 0) {
+          epsilonBtn.style.opacity = "0.5";
+          epsilonBtn.style.pointerEvents = "none";
+          epsilonBtn.querySelector(".choice-text").textContent =
+            "Celah tertutup...";
+          clearInterval(countdown);
+        }
+      }, 1000);
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'987157e0b2b0aa34',t:'MTc1OTIxMDM4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

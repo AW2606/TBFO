@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Q3 - Project Chimera</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto Mono", monospace;
+        background: #000000;
+        color: #00ffff;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Server Room Background */
+      .game-scene {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+      }
+
+      .server-room-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          #001122 0%,
+          #000814 50%,
+          #000000 100%
+        );
+        z-index: 1;
+        animation: backgroundPulse 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes backgroundPulse {
+        0% {
+          filter: brightness(1);
+        }
+        100% {
+          filter: brightness(1.2) hue-rotate(10deg);
+        }
+      }
+
+      /* Server Racks - More Active */
+      .server-racks {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+      }
+
+      .server-rack {
+        position: absolute;
+        width: 80px;
+        height: 60%;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 255, 255, 0.4) 0%,
+          rgba(0, 150, 150, 0.2) 100%
+        );
+        border: 2px solid rgba(0, 255, 255, 0.6);
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+      }
+
+      .server-rack::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+          0deg,
+          rgba(0, 255, 255, 0.3) 0px,
+          rgba(0, 255, 255, 0.3) 6px,
+          rgba(0, 255, 255, 0.1) 6px,
+          rgba(0, 255, 255, 0.1) 10px
+        );
+        animation: serverActivity 1s linear infinite;
+      }
+
+      @keyframes serverActivity {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(10px);
+        }
+      }
+
+      .server-rack:nth-child(1) {
+        left: 10%;
+        bottom: 20%;
+        animation: serverGlowActive1 2s infinite;
+      }
+      .server-rack:nth-child(2) {
+        left: 25%;
+        bottom: 20%;
+        animation: serverGlowActive2 1.8s infinite;
+      }
+      .server-rack:nth-child(3) {
+        right: 25%;
+        bottom: 20%;
+        animation: serverGlowActive1 2.2s infinite;
+      }
+      .server-rack:nth-child(4) {
+        right: 10%;
+        bottom: 20%;
+        animation: serverGlowActive2 1.6s infinite;
+      }
+
+      @keyframes serverGlowActive1 {
+        0%,
+        100% {
+          box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 50px rgba(0, 255, 255, 0.9);
+        }
+      }
+
+      @keyframes serverGlowActive2 {
+        0%,
+        100% {
+          box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 50px rgba(0, 255, 255, 0.9);
+        }
+      }
+
+      /* Flowing Code Overlay */
+      .code-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .code-stream {
+        position: absolute;
+        font-family: "Roboto Mono", monospace;
+        font-size: 14px;
+        color: #00ffff;
+        white-space: nowrap;
+        opacity: 0.8;
+        text-shadow: 0 0 10px #00ffff;
+        animation: codeFlow linear infinite;
+      }
+
+      @keyframes codeFlow {
+        0% {
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.8;
+        }
+        90% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateX(100vw);
+          opacity: 0;
+        }
+      }
+
+      /* Backdoor Active Indicator */
+      .backdoor-indicator {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 255, 255, 0.1);
+        border: 2px solid #00ffff;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+        z-index: 4;
+        animation: backdoorPulse 1.5s infinite;
+      }
+
+      @keyframes backdoorPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+          border-color: #00ffff;
+        }
+        50% {
+          box-shadow: 0 0 40px rgba(0, 255, 255, 1);
+          border-color: #ffffff;
+        }
+      }
+
+      .backdoor-text {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1rem;
+        color: #00ffff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-align: center;
+      }
+
+      /* Game Content Container */
+      .game-content {
+        position: relative;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100vh;
+        padding: 2rem;
+      }
+
+      /* Agent Status */
+      .agent-status {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .agent-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #00ffff;
+        box-shadow: 0 0 15px #00ffff;
+        animation: agentPulseActive 1s infinite;
+      }
+
+      @keyframes agentPulseActive {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.7;
+          transform: scale(1.2);
+        }
+      }
+
+      .agent-name {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #00ffff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Narrative Section */
+      .narrative-section {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem 0;
+      }
+
+      .narrative-box {
+        background: rgba(10, 25, 47, 0.95);
+        border: 3px solid rgba(0, 255, 255, 0.6);
+        padding: 3rem;
+        max-width: 900px;
+        backdrop-filter: blur(20px);
+        position: relative;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        animation: narrativeGlow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes narrativeGlow {
+        0% {
+          border-color: rgba(0, 255, 255, 0.6);
+          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        }
+        100% {
+          border-color: rgba(0, 255, 255, 0.9);
+          box-shadow: 0 15px 40px rgba(0, 255, 255, 0.2);
+        }
+      }
+
+      .narrative-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(0, 255, 255, 0.15),
+          rgba(255, 255, 255, 0.05)
+        );
+        opacity: 0.5;
+        z-index: -1;
+      }
+
+      .narrative-text {
+        font-family: "Roboto Mono", monospace;
+        font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+        line-height: 1.8;
+        color: #00ffff;
+        position: relative;
+        z-index: 1;
+        animation: textIntensify 3s ease-in-out;
+        text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+      }
+
+      @keyframes textIntensify {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        50% {
+          opacity: 0.7;
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Single Choice Button */
+      .choice-section {
+        display: flex;
+        justify-content: center;
+        padding: 3rem 0;
+      }
+
+      .single-choice-btn {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 900;
+        padding: 2rem 4rem;
+        border: 4px solid #00ffff;
+        background: rgba(0, 255, 255, 0.1);
+        color: #00ffff;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.6),
+          inset 0 0 30px rgba(0, 255, 255, 0.1);
+        animation: singleButtonPulse 2s infinite;
+      }
+
+      @keyframes singleButtonPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 30px rgba(0, 255, 255, 0.6),
+            inset 0 0 30px rgba(0, 255, 255, 0.1);
+          transform: scale(1);
+        }
+        50% {
+          box-shadow: 0 0 50px rgba(0, 255, 255, 0.9),
+            inset 0 0 50px rgba(0, 255, 255, 0.2);
+          transform: scale(1.05);
+        }
+      }
+
+      .single-choice-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 255, 255, 0.4),
+          transparent
+        );
+        transition: left 0.6s;
+      }
+
+      .single-choice-btn:hover {
+        background: rgba(0, 255, 255, 0.3);
+        box-shadow: 0 0 60px rgba(0, 255, 255, 1),
+          inset 0 0 60px rgba(0, 255, 255, 0.3);
+        transform: translateY(-5px) scale(1.1);
+        border-color: #ffffff;
+        color: #ffffff;
+      }
+
+      .single-choice-btn:hover::before {
+        left: 100%;
+      }
+
+      .choice-label {
+        display: block;
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin-bottom: 0.8rem;
+      }
+
+      .choice-text {
+        font-size: 1.1rem;
+        font-weight: 500;
+        opacity: 0.95;
+      }
+
+      /* Urgency Effects */
+      .urgency-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle at center,
+          transparent 60%,
+          rgba(0, 255, 255, 0.1) 100%
+        );
+        z-index: 2;
+        animation: urgencyPulse 3s ease-in-out infinite;
+      }
+
+      @keyframes urgencyPulse {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .game-content {
+          padding: 1rem;
+        }
+
+        .narrative-box {
+          padding: 2rem;
+        }
+
+        .single-choice-btn {
+          padding: 1.5rem 2.5rem;
+          font-size: 1.2rem;
+        }
+
+        .backdoor-indicator {
+          padding: 0.8rem 1.5rem;
+        }
+
+        .backdoor-text {
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .narrative-box {
+          padding: 1.5rem;
+        }
+
+        .single-choice-btn {
+          padding: 1.2rem 2rem;
+          font-size: 1rem;
+        }
+
+        .choice-label {
+          font-size: 2rem;
+        }
+
+        .server-rack {
+          width: 60px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-scene">
+      <!-- Server Room Background -->
+      <div class="server-room-background"></div>
+      <div class="urgency-overlay"></div>
+
+      <!-- Server Racks -->
+      <div class="server-racks">
+        <div class="server-rack"></div>
+        <div class="server-rack"></div>
+        <div class="server-rack"></div>
+        <div class="server-rack"></div>
+      </div>
+
+      <!-- Flowing Code Overlay -->
+      <div class="code-overlay" id="codeOverlay"></div>
+
+      <!-- Backdoor Active Indicator -->
+      <div class="backdoor-indicator">
+        <div class="backdoor-text">◊ BACKDOOR ACTIVE ◊</div>
+      </div>
+
+      <!-- Game Content -->
+      <div class="game-content">
+        <!-- Agent Status -->
+        <div class="agent-status">
+          <div class="agent-indicator"></div>
+          <div class="agent-name">Agent Alex</div>
+        </div>
+
+        <!-- Narrative Section -->
+        <div class="narrative-section">
+          <div class="narrative-box">
+            <p class="narrative-text">
+              Anda memilih memanfaatkan bantuan "Ghost". Celah keamanan terbuka
+              lebar, memberimu akses langsung untuk menghadapi Nexus. Tidak ada
+              waktu untuk ragu!
+            </p>
+          </div>
+        </div>
+
+        <!-- Single Choice Button -->
+        <div class="choice-section">
+          <a
+            href="#game_q4"
+            class="single-choice-btn"
+            onclick="makeChoice(event, 'A', 'q4.html')"
+          >
+            <span class="choice-label">A</span>
+            <span class="choice-text">Lanjutkan serangan ke inti Nexus.</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Code snippets for the flowing effect
+      const codeSnippets = [
+        "ACCESS GRANTED >>> NEXUS.CORE",
+        "FIREWALL.STATUS = DISABLED",
+        "GHOST.BACKDOOR = ACTIVE",
+        "SECURITY.LEVEL = 0",
+        "ADMIN.PRIVILEGES = TRUE",
+        "NEXUS.VULNERABILITY = EXPOSED",
+        "SYSTEM.BREACH = COMPLETE",
+        "ENCRYPTION.KEY = BYPASSED",
+        "ROOT.ACCESS = ENABLED",
+        "DEFENSE.MATRIX = OFFLINE",
+      ];
+
+      // Create flowing code streams
+      function createCodeStream() {
+        const container = document.getElementById("codeOverlay");
+        const stream = document.createElement("div");
+        stream.className = "code-stream";
+
+        // Random code snippet
+        stream.textContent =
+          codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+
+        // Random vertical position
+        stream.style.top = Math.random() * 80 + 10 + "%";
+
+        // Random animation duration
+        stream.style.animationDuration = Math.random() * 3 + 2 + "s";
+
+        // Random delay
+        stream.style.animationDelay = Math.random() * 1 + "s";
+
+        container.appendChild(stream);
+
+        // Remove after animation
+        setTimeout(() => {
+          if (stream.parentNode) {
+            stream.parentNode.removeChild(stream);
+          }
+        }, 6000);
+      }
+
+      // Create code streams continuously
+      setInterval(createCodeStream, 800);
+
+      // Choice selection function
+      function makeChoice(event, choice, destination) {
+        event.preventDefault();
+
+        const btn = event.currentTarget;
+
+        // Intense activation effect
+        btn.style.transform = "translateY(-5px) scale(1.15)";
+        btn.style.boxShadow = "0 0 80px rgba(0, 255, 255, 1)";
+        btn.style.background = "rgba(0, 255, 255, 0.5)";
+        btn.style.color = "#000000";
+
+        // Create multiple ripple effects
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            const ripple = document.createElement("div");
+            ripple.style.position = "absolute";
+            ripple.style.top = "50%";
+            ripple.style.left = "50%";
+            ripple.style.width = "0";
+            ripple.style.height = "0";
+            ripple.style.background = "rgba(0, 255, 255, 0.6)";
+            ripple.style.borderRadius = "50%";
+            ripple.style.transform = "translate(-50%, -50%)";
+            ripple.style.animation = "ripple 1s ease-out";
+            btn.appendChild(ripple);
+
+            setTimeout(() => ripple.remove(), 1000);
+          }, i * 200);
+        }
+
+        // Screen flash effect
+        const flash = document.createElement("div");
+        flash.style.position = "fixed";
+        flash.style.top = "0";
+        flash.style.left = "0";
+        flash.style.width = "100vw";
+        flash.style.height = "100vh";
+        flash.style.background = "rgba(0, 255, 255, 0.3)";
+        flash.style.zIndex = "9999";
+        flash.style.animation = "flash 0.5s ease-out";
+        document.body.appendChild(flash);
+
+        setTimeout(() => flash.remove(), 500);
+
+        // Navigate to destination
+        setTimeout(() => {
+          window.location.href = destination;
+        }, 1000);
+      }
+
+      // Add CSS for effects
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes ripple {
+                to {
+                    width: 400px;
+                    height: 400px;
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes flash {
+                0% { opacity: 0; }
+                50% { opacity: 1; }
+                100% { opacity: 0; }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Enhanced server activity
+      setInterval(() => {
+        document.querySelectorAll(".server-rack").forEach((rack) => {
+          if (Math.random() < 0.7) {
+            // Higher activity rate
+            const intensity = Math.random() * 0.3 + 0.7;
+            rack.style.opacity = intensity;
+            rack.style.filter = `brightness(${1 + Math.random() * 0.5})`;
+            setTimeout(() => {
+              rack.style.opacity = "1";
+              rack.style.filter = "brightness(1)";
+            }, 150);
+          }
+        });
+      }, 500);
+
+      // Initial code streams
+      for (let i = 0; i < 5; i++) {
+        setTimeout(createCodeStream, i * 300);
+      }
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'98715a7d804eaa34',t:'MTc1OTIxMDQ5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

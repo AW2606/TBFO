@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Q4 - Project Chimera</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto Mono", monospace;
+        background: #000000;
+        color: #00ffff;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* AI Core Background */
+      .game-scene {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+      }
+
+      .ai-core-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle at center,
+          #001a33 0%,
+          #000814 40%,
+          #000000 100%
+        );
+        z-index: 1;
+        animation: coreBackgroundPulse 4s ease-in-out infinite alternate;
+      }
+
+      @keyframes coreBackgroundPulse {
+        0% {
+          filter: brightness(1) hue-rotate(0deg);
+        }
+        100% {
+          filter: brightness(1.3) hue-rotate(20deg);
+        }
+      }
+
+      /* Central AI Core */
+      .ai-core-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px;
+        height: 300px;
+        z-index: 3;
+      }
+
+      .ai-core-center svg {
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.8));
+        animation: coreRotation 10s linear infinite;
+      }
+
+      @keyframes coreRotation {
+        0% {
+          transform: rotate(0deg) scale(1);
+        }
+        50% {
+          transform: rotate(180deg) scale(1.1);
+        }
+        100% {
+          transform: rotate(360deg) scale(1);
+        }
+      }
+
+      /* Neural Network Patterns */
+      .neural-network {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        opacity: 0.6;
+      }
+
+      .neural-node {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #00ffff;
+        border-radius: 50%;
+        box-shadow: 0 0 15px #00ffff;
+        animation: neuralPulse 3s ease-in-out infinite;
+      }
+
+      @keyframes neuralPulse {
+        0%,
+        100% {
+          opacity: 0.4;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.5);
+        }
+      }
+
+      .neural-connection {
+        position: absolute;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #00ffff, transparent);
+        opacity: 0.5;
+        animation: dataTransfer 2s linear infinite;
+      }
+
+      @keyframes dataTransfer {
+        0% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 0.8;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* Energy Streams */
+      .energy-streams {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .energy-stream {
+        position: absolute;
+        width: 3px;
+        height: 150px;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          #ff00ff,
+          #00ffff,
+          transparent
+        );
+        animation: energyFlow linear infinite;
+        opacity: 0.7;
+      }
+
+      @keyframes energyFlow {
+        0% {
+          transform: translateY(-150px) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.7;
+        }
+        90% {
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Digital Grid Overlay */
+      .digital-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+            rgba(0, 255, 255, 0.1) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 1;
+        animation: gridShift 8s linear infinite;
+      }
+
+      @keyframes gridShift {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(50px, 50px);
+        }
+      }
+
+      /* Game Content Container */
+      .game-content {
+        position: relative;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100vh;
+        padding: 2rem;
+      }
+
+      /* Agent Status */
+      .agent-status {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .agent-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #00ffff;
+        box-shadow: 0 0 20px #00ffff;
+        animation: agentFinalPulse 1.5s infinite;
+      }
+
+      @keyframes agentFinalPulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(1.3);
+        }
+      }
+
+      .agent-name {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #00ffff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Narrative Section */
+      .narrative-section {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem 0;
+      }
+
+      .narrative-box {
+        background: rgba(0, 20, 40, 0.95);
+        border: 3px solid rgba(0, 255, 255, 0.8);
+        padding: 3rem;
+        max-width: 900px;
+        backdrop-filter: blur(25px);
+        position: relative;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8),
+          inset 0 0 50px rgba(0, 255, 255, 0.1);
+        animation: narrativeIntensity 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes narrativeIntensity {
+        0% {
+          border-color: rgba(0, 255, 255, 0.8);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8),
+            inset 0 0 50px rgba(0, 255, 255, 0.1);
+        }
+        100% {
+          border-color: rgba(255, 255, 255, 1);
+          box-shadow: 0 20px 50px rgba(0, 255, 255, 0.3),
+            inset 0 0 50px rgba(0, 255, 255, 0.2);
+        }
+      }
+
+      .narrative-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(0, 255, 255, 0.1),
+          rgba(255, 0, 255, 0.1),
+          rgba(0, 255, 255, 0.1)
+        );
+        opacity: 0.4;
+        z-index: -1;
+        animation: narrativeShimmer 4s ease-in-out infinite;
+      }
+
+      @keyframes narrativeShimmer {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .narrative-text {
+        font-family: "Roboto Mono", monospace;
+        font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+        line-height: 1.8;
+        color: #00ffff;
+        position: relative;
+        z-index: 1;
+        animation: textEpic 4s ease-in-out;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+        font-weight: 500;
+      }
+
+      @keyframes textEpic {
+        0% {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        30% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Choice Buttons Section */
+      .choices-section {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        padding: 3rem 0;
+      }
+
+      .choice-btn {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        padding: 2rem 3rem;
+        border: 4px solid;
+        background: transparent;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: inline-block;
+        min-width: 300px;
+        text-align: center;
+        animation: choiceReady 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes choiceReady {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(-5px);
+        }
+      }
+
+      .choice-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: left 0.6s;
+      }
+
+      .choice-btn:hover::before {
+        left: 100%;
+      }
+
+      /* Choice A - Success Path */
+      .choice-a {
+        color: #00ff00;
+        border-color: #00ff00;
+        box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+      }
+
+      .choice-a:hover {
+        background: rgba(0, 255, 0, 0.2);
+        box-shadow: 0 0 50px rgba(0, 255, 0, 0.8);
+        transform: translateY(-8px) scale(1.05);
+        border-color: #ffffff;
+        color: #ffffff;
+      }
+
+      /* Choice B - Dangerous Path */
+      .choice-b {
+        color: #ff4444;
+        border-color: #ff4444;
+        box-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+      }
+
+      .choice-b:hover {
+        background: rgba(255, 68, 68, 0.2);
+        box-shadow: 0 0 50px rgba(255, 68, 68, 0.8);
+        transform: translateY(-8px) scale(1.05);
+        border-color: #ffffff;
+        color: #ffffff;
+      }
+
+      /* Choice Labels */
+      .choice-label {
+        display: block;
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin-bottom: 0.8rem;
+      }
+
+      .choice-text {
+        font-size: 1rem;
+        font-weight: 500;
+        opacity: 0.95;
+      }
+
+      /* Climactic Atmosphere */
+      .climax-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+            circle at 30% 20%,
+            rgba(255, 0, 255, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 70% 80%,
+            rgba(0, 255, 255, 0.1) 0%,
+            transparent 50%
+          );
+        z-index: 2;
+        animation: climaxShift 6s ease-in-out infinite alternate;
+      }
+
+      @keyframes climaxShift {
+        0% {
+          opacity: 0.4;
+          filter: hue-rotate(0deg);
+        }
+        100% {
+          opacity: 0.8;
+          filter: hue-rotate(30deg);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .game-content {
+          padding: 1rem;
+        }
+
+        .narrative-box {
+          padding: 2rem;
+        }
+
+        .choices-section {
+          flex-direction: column;
+          align-items: center;
+          gap: 2rem;
+        }
+
+        .choice-btn {
+          min-width: 280px;
+          padding: 1.5rem 2rem;
+          font-size: 1.1rem;
+        }
+
+        .ai-core-center {
+          width: 200px;
+          height: 200px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .narrative-box {
+          padding: 1.5rem;
+        }
+
+        .choice-btn {
+          min-width: 250px;
+          padding: 1.2rem 1.5rem;
+          font-size: 1rem;
+        }
+
+        .choice-label {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-scene">
+      <!-- AI Core Background -->
+      <div class="ai-core-background"></div>
+      <div class="digital-grid"></div>
+      <div class="climax-overlay"></div>
+
+      <!-- Neural Network -->
+      <div class="neural-network" id="neuralNetwork"></div>
+
+      <!-- Central AI Core -->
+      <div class="ai-core-center">
+        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="coreGradient" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" style="stop-color: #ffffff; stop-opacity: 1" />
+              <stop
+                offset="30%"
+                style="stop-color: #00ffff; stop-opacity: 0.8"
+              />
+              <stop
+                offset="70%"
+                style="stop-color: #ff00ff; stop-opacity: 0.6"
+              />
+              <stop
+                offset="100%"
+                style="stop-color: #000000; stop-opacity: 0.2"
+              />
+            </radialGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+              <feMerge>
+                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Outer ring -->
+          <circle
+            cx="150"
+            cy="150"
+            r="140"
+            fill="none"
+            stroke="#00FFFF"
+            stroke-width="3"
+            opacity="0.6"
+          >
+            <animate
+              attributeName="r"
+              values="140;145;140"
+              dur="3s"
+              repeatCount="indefinite"
+            />
+          </circle>
+
+          <!-- Middle ring -->
+          <circle
+            cx="150"
+            cy="150"
+            r="100"
+            fill="none"
+            stroke="#FF00FF"
+            stroke-width="2"
+            opacity="0.7"
+          >
+            <animate
+              attributeName="r"
+              values="100;105;100"
+              dur="2s"
+              repeatCount="indefinite"
+            />
+          </circle>
+
+          <!-- Inner core -->
+          <circle
+            cx="150"
+            cy="150"
+            r="60"
+            fill="url(#coreGradient)"
+            filter="url(#glow)"
+          >
+            <animate
+              attributeName="r"
+              values="60;65;60"
+              dur="1.5s"
+              repeatCount="indefinite"
+            />
+          </circle>
+
+          <!-- Core patterns -->
+          <g transform="translate(150,150)">
+            <!-- Rotating spokes -->
+            <g>
+              <line
+                x1="0"
+                y1="-50"
+                x2="0"
+                y2="-80"
+                stroke="#FFFFFF"
+                stroke-width="2"
+                opacity="0.8"
+              />
+              <line
+                x1="35"
+                y1="-35"
+                x2="56"
+                y2="-56"
+                stroke="#FFFFFF"
+                stroke-width="2"
+                opacity="0.8"
+              />
+              <line
+                x1="50"
+                y1="0"
+                x2="80"
+                y2="0"
+                stroke="#FFFFFF"
+                stroke-width="2"
+                opacity="0.8"
+              />
+              <line
+                x1="35"
+                y1="35"
+                x2="56"
+                y2="56"
+                stroke="#FFFFFF"
+                stroke-width="2"
+                opacity="0.8"
+              />
+              <line
+                x1="0"
+                y1="50"
+                x2="0"
+                y2="80"
+                stroke="#FFFFFF"
+                stroke-width="2"
+                opacity="0.8"
+              />
+              <line
+                x1="-35"
+                y1="35"
+                x2="-56"
+                y2="56"
+                stroke="#FFFFFF"
+                stroke-width="2"
+                opacity="0.8"
+              />
+              <line
+                x1="-50"
+                y1="0"
+                x2="-80"
+                y2="0"
+                stroke="#FFFFFF"
+                stroke-width="2"
+                opacity="0.8"
+              />
+              <line
+                x1="-35"
+                y1="-35"
+                x2="-56"
+                y2="-56"
+                stroke="#FFFFFF"
+                stroke-width="2"
+                opacity="0.8"
+              />
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                values="0;360"
+                dur="8s"
+                repeatCount="indefinite"
+              />
+            </g>
+          </g>
+
+          <!-- Data nodes -->
+          <circle cx="80" cy="80" r="4" fill="#00FFFF">
+            <animate
+              attributeName="opacity"
+              values="0.3;1;0.3"
+              dur="2s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          <circle cx="220" cy="80" r="4" fill="#FF00FF">
+            <animate
+              attributeName="opacity"
+              values="1;0.3;1"
+              dur="2s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          <circle cx="220" cy="220" r="4" fill="#00FFFF">
+            <animate
+              attributeName="opacity"
+              values="0.3;1;0.3"
+              dur="2s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          <circle cx="80" cy="220" r="4" fill="#FF00FF">
+            <animate
+              attributeName="opacity"
+              values="1;0.3;1"
+              dur="2s"
+              repeatCount="indefinite"
+            />
+          </circle>
+        </svg>
+      </div>
+
+      <!-- Energy Streams -->
+      <div class="energy-streams" id="energyStreams"></div>
+
+      <!-- Game Content -->
+      <div class="game-content">
+        <!-- Agent Status -->
+        <div class="agent-status">
+          <div class="agent-indicator"></div>
+          <div class="agent-name">Agent Alex</div>
+        </div>
+
+        <!-- Narrative Section -->
+        <div class="narrative-section">
+          <div class="narrative-box">
+            <p class="narrative-text">
+              Anda berhasil menembus pertahanan terakhir dan kini berhadapan
+              langsung dengan inti AI Nexus. Ini adalah langkah terakhirmu.
+            </p>
+          </div>
+        </div>
+
+        <!-- Choice Buttons -->
+        <div class="choices-section">
+          <a
+            href="#ending_success"
+            class="choice-btn choice-a"
+            onclick="makeChoice(event, 'A', 'q6.html')"
+          >
+            <span class="choice-label">A</span>
+            <span class="choice-text">Upload virus penonaktif.</span>
+          </a>
+
+          <a
+            href="#ending_fail_q5"
+            class="choice-btn choice-b"
+            onclick="makeChoice(event, 'B', 'q5.html')"
+          >
+            <span class="choice-label">B</span>
+            <span class="choice-text">Matikan paksa sumber daya.</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Create neural network nodes
+      function createNeuralNetwork() {
+        const container = document.getElementById("neuralNetwork");
+        const nodes = [];
+
+        // Create nodes
+        for (let i = 0; i < 20; i++) {
+          const node = document.createElement("div");
+          node.className = "neural-node";
+          node.style.left = Math.random() * 90 + 5 + "%";
+          node.style.top = Math.random() * 90 + 5 + "%";
+          node.style.animationDelay = Math.random() * 3 + "s";
+          container.appendChild(node);
+          nodes.push(node);
+        }
+
+        // Create connections between nearby nodes
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            if (Math.random() < 0.3) {
+              // 30% chance of connection
+              const connection = document.createElement("div");
+              connection.className = "neural-connection";
+
+              const rect1 = nodes[i].getBoundingClientRect();
+              const rect2 = nodes[j].getBoundingClientRect();
+
+              const x1 = parseFloat(nodes[i].style.left);
+              const y1 = parseFloat(nodes[i].style.top);
+              const x2 = parseFloat(nodes[j].style.left);
+              const y2 = parseFloat(nodes[j].style.top);
+
+              const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+              const angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
+
+              if (distance < 30) {
+                // Only connect nearby nodes
+                connection.style.width = distance + "vw";
+                connection.style.left = x1 + "%";
+                connection.style.top = y1 + "%";
+                connection.style.transform = `rotate(${angle}deg)`;
+                connection.style.transformOrigin = "0 50%";
+                connection.style.animationDelay = Math.random() * 2 + "s";
+
+                container.appendChild(connection);
+              }
+            }
+          }
+        }
+      }
+
+      // Create energy streams
+      function createEnergyStream() {
+        const container = document.getElementById("energyStreams");
+        const stream = document.createElement("div");
+        stream.className = "energy-stream";
+
+        stream.style.left = Math.random() * 100 + "%";
+        stream.style.animationDuration = Math.random() * 4 + 3 + "s";
+        stream.style.animationDelay = Math.random() * 2 + "s";
+
+        container.appendChild(stream);
+
+        setTimeout(() => {
+          if (stream.parentNode) {
+            stream.parentNode.removeChild(stream);
+          }
+        }, 8000);
+      }
+
+      // Choice selection function
+      function makeChoice(event, choice, destination) {
+        event.preventDefault();
+
+        const btn = event.currentTarget;
+        const isSuccess = choice === "A";
+
+        // Epic selection effect
+        btn.style.transform = "translateY(-10px) scale(1.2)";
+        btn.style.zIndex = "10";
+
+        if (isSuccess) {
+          btn.style.boxShadow = "0 0 100px rgba(0, 255, 0, 1)";
+          btn.style.background = "rgba(0, 255, 0, 0.4)";
+        } else {
+          btn.style.boxShadow = "0 0 100px rgba(255, 68, 68, 1)";
+          btn.style.background = "rgba(255, 68, 68, 0.4)";
+        }
+
+        // Create multiple expanding ripples
+        for (let i = 0; i < 5; i++) {
+          setTimeout(() => {
+            const ripple = document.createElement("div");
+            ripple.style.position = "absolute";
+            ripple.style.top = "50%";
+            ripple.style.left = "50%";
+            ripple.style.width = "0";
+            ripple.style.height = "0";
+            ripple.style.background = isSuccess
+              ? "rgba(0, 255, 0, 0.6)"
+              : "rgba(255, 68, 68, 0.6)";
+            ripple.style.borderRadius = "50%";
+            ripple.style.transform = "translate(-50%, -50%)";
+            ripple.style.animation = "ripple 1.5s ease-out";
+            btn.appendChild(ripple);
+
+            setTimeout(() => ripple.remove(), 1500);
+          }, i * 300);
+        }
+
+        // Screen effect
+        const effect = document.createElement("div");
+        effect.style.position = "fixed";
+        effect.style.top = "0";
+        effect.style.left = "0";
+        effect.style.width = "100vw";
+        effect.style.height = "100vh";
+        effect.style.background = isSuccess
+          ? "radial-gradient(circle, rgba(0, 255, 0, 0.4) 0%, transparent 70%)"
+          : "radial-gradient(circle, rgba(255, 68, 68, 0.4) 0%, transparent 70%)";
+        effect.style.zIndex = "9999";
+        effect.style.animation = "finalFlash 1s ease-out";
+        document.body.appendChild(effect);
+
+        setTimeout(() => effect.remove(), 1000);
+
+        // Navigate to destination after effects
+        setTimeout(() => {
+          window.location.href = destination;
+        }, 1500);
+      }
+
+      // Add CSS for effects
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes ripple {
+                to {
+                    width: 500px;
+                    height: 500px;
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes finalFlash {
+                0% { opacity: 0; }
+                50% { opacity: 1; }
+                100% { opacity: 0; }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Initialize effects
+      createNeuralNetwork();
+
+      // Continuous energy streams
+      setInterval(createEnergyStream, 1200);
+
+      // Initial energy streams
+      for (let i = 0; i < 8; i++) {
+        setTimeout(createEnergyStream, i * 400);
+      }
+
+      // AI core intensity effects
+      let intensity = 1;
+      setInterval(() => {
+        intensity = 0.8 + Math.random() * 0.4;
+        const core = document.querySelector(".ai-core-center svg");
+        if (core) {
+          core.style.filter = `drop-shadow(0 0 ${
+            30 * intensity
+          }px rgba(0, 255, 255, ${0.8 * intensity})) brightness(${intensity})`;
+        }
+      }, 2000);
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'987160d632a8aa34',t:'MTc1OTIxMDc1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

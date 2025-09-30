@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How to Play - Project Chimera</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto Mono", monospace;
+        background: linear-gradient(135deg, #0a192f 0%, #000000 100%);
+        color: #00ffff;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Circuit Board Pattern Background */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(
+            circle at 20% 20%,
+            rgba(0, 255, 255, 0.1) 1px,
+            transparent 1px
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(255, 0, 255, 0.1) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(255, 0, 255, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px, 30px 30px, 20px 20px, 20px 20px;
+        z-index: -1;
+        opacity: 0.3;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Page Title */
+      .page-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 900;
+        color: #ff00ff;
+        text-shadow: 0 0 20px rgba(255, 0, 255, 0.8),
+          0 0 40px rgba(255, 0, 255, 0.6);
+        text-align: center;
+        margin-bottom: 3rem;
+        letter-spacing: 2px;
+        animation: titleGlow 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes titleGlow {
+        0% {
+          text-shadow: 0 0 20px rgba(255, 0, 255, 0.8),
+            0 0 40px rgba(255, 0, 255, 0.6);
+        }
+        100% {
+          text-shadow: 0 0 30px rgba(255, 0, 255, 1),
+            0 0 50px rgba(255, 0, 255, 0.8);
+        }
+      }
+
+      /* Instructions Grid */
+      .instructions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+      }
+
+      /* Instruction Card */
+      .instruction-card {
+        background: rgba(10, 25, 47, 0.8);
+        border: 2px solid rgba(0, 255, 255, 0.3);
+        padding: 2rem;
+        position: relative;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      .instruction-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(255, 0, 255, 0.1),
+          rgba(0, 255, 255, 0.1)
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .instruction-card:hover {
+        border-color: #ff00ff;
+        box-shadow: 0 10px 30px rgba(255, 0, 255, 0.3);
+        transform: translateY(-5px);
+      }
+
+      .instruction-card:hover::before {
+        opacity: 1;
+      }
+
+      .card-content {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Icon Container */
+      .icon-container {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #00ffff;
+        border-radius: 50%;
+        background: rgba(0, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .instruction-card:hover .icon-container {
+        border-color: #ff00ff;
+        background: rgba(255, 0, 255, 0.2);
+        box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+      }
+
+      /* Icons */
+      .icon {
+        font-size: 2rem;
+        color: #00ffff;
+        transition: color 0.3s ease;
+      }
+
+      .instruction-card:hover .icon {
+        color: #ff00ff;
+      }
+
+      /* Special Epsilon Icon */
+      .epsilon-icon {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        font-size: 2.5rem;
+      }
+
+      /* Card Title */
+      .card-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #ff00ff;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Card Text */
+      .card-text {
+        font-family: "Roboto Mono", monospace;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #00ffff;
+        opacity: 0.9;
+      }
+
+      /* Understanding Button */
+      .understand-btn {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #00ffff;
+        background: transparent;
+        border: 3px solid #00ffff;
+        padding: 1rem 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin: 0 auto;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.4),
+          inset 0 0 20px rgba(0, 255, 255, 0.1);
+        animation: buttonPulse 2s infinite;
+      }
+
+      @keyframes buttonPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(0, 255, 255, 0.4),
+            inset 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(0, 255, 255, 0.6),
+            inset 0 0 30px rgba(0, 255, 255, 0.2);
+        }
+      }
+
+      .understand-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 255, 255, 0.3),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .understand-btn:hover {
+        color: #000000;
+        background: rgba(0, 255, 255, 0.9);
+        border-color: #00ffff;
+        box-shadow: 0 0 40px rgba(0, 255, 255, 0.8),
+          inset 0 0 40px rgba(0, 255, 255, 0.3);
+        transform: translateY(-3px);
+        text-shadow: none;
+      }
+
+      .understand-btn:hover::before {
+        left: 100%;
+      }
+
+      /* Button Container */
+      .button-container {
+        text-align: center;
+        margin-top: 3rem;
+      }
+
+      /* Animated Elements */
+      .instruction-card {
+        animation: slideInUp 0.6s ease-out forwards;
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      .instruction-card:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .instruction-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .instruction-card:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .instruction-card:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes slideInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem;
+        }
+
+        .instructions-grid {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+
+        .instruction-card {
+          padding: 1.5rem;
+        }
+
+        .understand-btn {
+          font-size: 1.1rem;
+          padding: 0.8rem 2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .page-title {
+          margin-bottom: 2rem;
+        }
+
+        .icon-container {
+          width: 60px;
+          height: 60px;
+        }
+
+        .icon {
+          font-size: 1.5rem;
+        }
+
+        .epsilon-icon {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="page-title">HOW TO PLAY</h1>
+
+      <div class="instructions-grid">
+        <!-- Section 1: Choose Your Path -->
+        <div class="instruction-card">
+          <div class="card-content">
+            <div class="icon-container">
+              <div class="icon">
+                <svg
+                  width="40"
+                  height="40"
+                  viewBox="0 0 40 40"
+                  fill="currentColor"
+                >
+                  <path d="M20 5 L35 20 L25 20 L25 35 L15 35 L15 20 L5 20 Z" />
+                  <path d="M25 20 L35 15 L35 25 Z" opacity="0.7" />
+                  <path d="M15 20 L5 15 L5 25 Z" opacity="0.7" />
+                </svg>
+              </div>
+            </div>
+            <h3 class="card-title">PILIH JALANMU</h3>
+            <p class="card-text">Pilih A atau B untuk melanjutkan cerita.</p>
+          </div>
+        </div>
+
+        <!-- Section 2: Consequences -->
+        <div class="instruction-card">
+          <div class="card-content">
+            <div class="icon-container">
+              <div class="icon">!</div>
+            </div>
+            <h3 class="card-title">ADA KONSEKUENSI</h3>
+            <p class="card-text">Pilihan salah bisa mengakhiri misimu.</p>
+          </div>
+        </div>
+
+        <!-- Section 3: Epsilon Option -->
+        <div class="instruction-card">
+          <div class="card-content">
+            <div class="icon-container">
+              <div class="icon epsilon-icon">ε</div>
+            </div>
+            <h3 class="card-title">PERHATIKAN OPSI ε</h3>
+            <p class="card-text">
+              Terkadang, sebuah kesempatan tak terduga (ε) akan muncul. Pilihan
+              ini unik dan spontan.
+            </p>
+          </div>
+        </div>
+
+        <!-- Section 4: Reach Goal -->
+        <div class="instruction-card">
+          <div class="card-content">
+            <div class="icon-container">
+              <div class="icon">🏆</div>
+            </div>
+            <h3 class="card-title">CAPAI TUJUAN</h3>
+            <p class="card-text">Nonaktifkan AI Nexus.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-container">
+        <a
+          href="#game_q0"
+          class="understand-btn"
+          onclick="navigateToGame(event)"
+          >SAYA MENGERTI</a
+        >
+      </div>
+    </div>
+
+    <script>
+      // Navigation function
+      function navigateToGame(event) {
+        event.preventDefault();
+
+        // Add click effect
+        const btn = event.target;
+        btn.style.transform = "translateY(-3px) scale(0.95)";
+        btn.style.boxShadow = "0 0 50px rgba(0, 255, 255, 1)";
+
+        setTimeout(() => {
+          btn.style.transform = "translateY(-3px)";
+          btn.style.boxShadow = "0 0 40px rgba(0, 255, 255, 0.8)";
+        }, 150);
+
+        // Navigate to pengantar page
+        setTimeout(() => {
+          window.location.href = "pengantar.html";
+        }, 300);
+      }
+
+      // Add hover effects to cards
+      document.querySelectorAll(".instruction-card").forEach((card) => {
+        card.addEventListener("mouseenter", function () {
+          this.style.filter = "brightness(1.1)";
+        });
+
+        card.addEventListener("mouseleave", function () {
+          this.style.filter = "brightness(1)";
+        });
+      });
+
+      // Add subtle animation to icons
+      setInterval(() => {
+        document.querySelectorAll(".icon-container").forEach((container) => {
+          if (Math.random() < 0.1) {
+            // 10% chance
+            container.style.transform = "scale(1.1)";
+            setTimeout(() => {
+              container.style.transform = "scale(1)";
+            }, 200);
+          }
+        });
+      }, 3000);
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'98714df175caaa34',t:'MTc1OTIwOTk3Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
