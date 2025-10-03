@@ -9,6 +9,10 @@
       rel="stylesheet"
     />
     <style>
+      html {
+        font-size: 16px;
+      }
+
       body {
         box-sizing: border-box;
       }
@@ -17,6 +21,12 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+      }
+
+      /* General responsive adjustments */
+      img, svg, video, canvas, iframe, object, embed {
+        max-width: 100%;
+        height: auto;
       }
 
       body {
@@ -385,6 +395,11 @@
         box-shadow: 0 0 20px rgba(102, 0, 0, 0.5),
           inset 0 0 20px rgba(102, 0, 0, 0.2);
         animation: buttonDimPulse 4s ease-in-out infinite;
+        min-height: 65px;
+        min-width: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       @keyframes buttonDimPulse {
@@ -487,13 +502,33 @@
       }
 
       /* Responsive Design */
+      @media (max-width: 1024px) {
+        .failure-content {
+          padding: 1.5rem;
+        }
+
+        .mission-failed {
+          letter-spacing: 5px;
+          margin-bottom: 2.5rem;
+        }
+
+        .ai-taunt {
+          margin-bottom: 3.5rem;
+        }
+
+        .try-again-btn {
+          padding: 1.4rem 2.5rem;
+          font-size: 1.3rem;
+        }
+      }
+
       @media (max-width: 768px) {
         .failure-content {
           padding: 1rem;
         }
 
         .mission-failed {
-          letter-spacing: 4px;
+          letter-spacing: 3px;
           margin-bottom: 2rem;
         }
 
@@ -508,19 +543,41 @@
         }
 
         .try-again-btn {
-          padding: 1.2rem 2rem;
-          font-size: 1.2rem;
+          padding: 1.1rem 1.8rem;
+          font-size: 1.1rem;
         }
       }
 
       @media (max-width: 480px) {
+        .failure-content {
+          padding: 0.8rem;
+        }
+
         .mission-failed {
           letter-spacing: 2px;
+          font-size: clamp(2.2rem, 8vw, 3rem);
+        }
+
+        .ai-taunt {
+          font-size: clamp(1.1rem, 3vw, 1.5rem);
         }
 
         .try-again-btn {
-          padding: 1rem 1.5rem;
-          font-size: 1rem;
+          padding: 0.9rem 1.4rem;
+          font-size: 0.95rem;
+          min-height: 50px;
+        }
+      }
+      
+      @media (max-width: 320px) {
+        .mission-failed {
+          font-size: clamp(2rem, 8vw, 2.5rem);
+          letter-spacing: 1px;
+        }
+
+        .try-again-btn {
+          padding: 0.8rem 1.2rem;
+          font-size: 0.9rem;
         }
       }
     </style>

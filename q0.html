@@ -9,6 +9,10 @@
       rel="stylesheet"
     />
     <style>
+      html {
+        font-size: 16px;
+      }
+
       body {
         box-sizing: border-box;
       }
@@ -17,6 +21,12 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+      }
+
+      /* General responsive adjustments */
+      img, svg, video, canvas, iframe, object, embed {
+        max-width: 100%;
+        height: auto;
       }
 
       body {
@@ -32,7 +42,7 @@
       .game-scene {
         position: relative;
         width: 100vw;
-        height: 100vh;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -145,6 +155,8 @@
         width: 100%;
         height: 100%;
         filter: drop-shadow(0 0 15px rgba(255, 0, 255, 0.5));
+        max-width: 100%;
+        max-height: 100%;
       }
 
       /* Atmospheric Lighting */
@@ -269,8 +281,8 @@
 
       .narrative-text {
         font-family: "Roboto Mono", monospace;
-        font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-        line-height: 1.8;
+        font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+        line-height: 1.7;
         color: #00ffff;
         position: relative;
         z-index: 1;
@@ -313,7 +325,12 @@
         text-decoration: none;
         display: inline-block;
         min-width: 280px;
+        min-height: 80px;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
 
       .choice-btn::before {
@@ -402,13 +419,23 @@
       }
 
       /* Responsive Design */
+      @media (max-width: 1024px) {
+        .game-content {
+          padding: 1.5rem;
+        }
+
+        .narrative-box {
+          padding: 2.5rem;
+        }
+      }
+
       @media (max-width: 768px) {
         .game-content {
           padding: 1rem;
         }
 
         .narrative-box {
-          padding: 2rem;
+          padding: 1.8rem;
         }
 
         .choices-section {
@@ -418,29 +445,58 @@
         }
 
         .choice-btn {
-          min-width: 250px;
-          padding: 1.2rem 2rem;
-          font-size: 1rem;
+          min-width: 240px;
+          padding: 1.1rem 1.8rem;
+          font-size: 0.95rem;
         }
 
         .guard-silhouette {
           width: 60px;
           height: 150px;
         }
+        
+        .narrative-text {
+          font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+        }
       }
 
       @media (max-width: 480px) {
+        .game-content {
+          padding: 0.8rem;
+        }
+
         .narrative-box {
-          padding: 1.5rem;
+          padding: 1.3rem;
         }
 
         .choice-btn {
           min-width: 200px;
-          padding: 1rem 1.5rem;
+          padding: 0.9rem 1.4rem;
+          font-size: 0.9rem;
         }
 
         .pillar {
           width: 40px;
+        }
+        
+        .narrative-text {
+          font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+        }
+      }
+      
+      @media (max-width: 320px) {
+        .narrative-box {
+          padding: 1rem;
+        }
+
+        .choice-btn {
+          min-width: 180px;
+          padding: 0.8rem 1.2rem;
+          font-size: 0.85rem;
+        }
+        
+        .narrative-text {
+          font-size: clamp(0.8rem, 2.5vw, 1rem);
         }
       }
     </style>

@@ -9,6 +9,10 @@
       rel="stylesheet"
     />
     <style>
+      html {
+        font-size: 16px;
+      }
+
       body {
         box-sizing: border-box;
       }
@@ -17,6 +21,12 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+      }
+
+      /* General responsive adjustments */
+      img, svg, video, canvas, iframe, object, embed {
+        max-width: 100%;
+        height: auto;
       }
 
       body {
@@ -65,11 +75,11 @@
 
       .page-title {
         font-family: "Orbitron", sans-serif;
-        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-size: clamp(1.5rem, 4vw, 2.8rem);
         font-weight: 900;
         color: #40e0ff;
         text-transform: uppercase;
-        letter-spacing: 3px;
+        letter-spacing: 2px;
         margin-bottom: 1rem;
         text-shadow: 0 0 20px rgba(64, 224, 255, 0.5);
         animation: titleGlow 3s ease-in-out infinite alternate;
@@ -377,6 +387,11 @@
         box-shadow: 0 0 15px rgba(64, 224, 255, 0.4),
           inset 0 0 15px rgba(64, 224, 255, 0.1);
         animation: backButtonPulse 2s infinite;
+        min-height: 45px;
+        min-width: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       @keyframes backButtonPulse {
@@ -422,6 +437,16 @@
       }
 
       /* Responsive Design */
+      @media (max-width: 1024px) {
+        .explanation-container {
+          padding: 2.5rem 1.5rem;
+        }
+        
+        .content-layout {
+          gap: 3rem;
+        }
+      }
+
       @media (max-width: 768px) {
         .explanation-container {
           padding: 2rem 1rem;
@@ -462,22 +487,59 @@
       }
 
       @media (max-width: 480px) {
+        .explanation-container {
+          padding: 1.5rem 0.8rem;
+        }
+        
         .content-column {
           padding: 1.5rem;
         }
 
         .diagram-section {
-          padding: 2rem;
+          padding: 1.5rem;
         }
 
         .column-text {
-          font-size: 1rem;
+          font-size: 0.95rem;
+          line-height: 1.7;
         }
 
         .state {
           width: 60px;
           height: 60px;
-          font-size: 1rem;
+          font-size: 0.9rem;
+        }
+        
+        .column-title {
+          font-size: 1.2rem;
+        }
+        
+        .back-btn {
+          font-size: 0.9rem;
+          padding: 0.6rem 1.2rem;
+          width: 150px;
+        }
+      }
+      
+      @media (max-width: 320px) {
+        .content-column {
+          padding: 1.2rem;
+        }
+        
+        .column-text {
+          font-size: 0.9rem;
+        }
+        
+        .state {
+          width: 50px;
+          height: 50px;
+          font-size: 0.8rem;
+        }
+        
+        .back-btn {
+          font-size: 0.85rem;
+          padding: 0.5rem 1rem;
+          width: 140px;
         }
       }
     </style>

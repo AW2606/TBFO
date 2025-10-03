@@ -9,6 +9,10 @@
       rel="stylesheet"
     />
     <style>
+      html {
+        font-size: 16px;
+      }
+
       body {
         box-sizing: border-box;
       }
@@ -17,6 +21,12 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+      }
+
+      /* General responsive adjustments */
+      img, svg, video, canvas, iframe, object, embed {
+        max-width: 100%;
+        height: auto;
       }
 
       body {
@@ -32,7 +42,7 @@
       .game-scene {
         position: relative;
         width: 100vw;
-        height: 100vh;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -223,8 +233,9 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 100vh;
+        min-height: 100vh;
         padding: 2rem;
+        width: 100%;
       }
 
       /* Agent Status */
@@ -273,6 +284,8 @@
         justify-content: center;
         text-align: center;
         padding: 2rem 0;
+        min-height: 0; /* Allows scrolling when content overflows */
+        overflow: auto;
       }
 
       .narrative-box {
@@ -360,6 +373,8 @@
         justify-content: center;
         gap: 3rem;
         padding: 3rem 0;
+        width: 100%;
+        margin: 0 auto;
       }
 
       .choice-btn {
@@ -378,8 +393,13 @@
         text-decoration: none;
         display: inline-block;
         min-width: 300px;
+        min-height: 90px;
         text-align: center;
         animation: choiceReady 2s ease-in-out infinite alternate;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
 
       @keyframes choiceReady {
@@ -488,13 +508,38 @@
       }
 
       /* Responsive Design */
+      @media (max-width: 1024px) {
+        .game-content {
+          padding: 1.5rem;
+        }
+
+        .narrative-box {
+          padding: 2.5rem;
+        }
+
+        .choices-section {
+          gap: 2.5rem;
+        }
+
+        .choice-btn {
+          min-width: 280px;
+          padding: 1.6rem 2.2rem;
+          font-size: 1.15rem;
+        }
+
+        .ai-core-center {
+          width: 220px;
+          height: 220px;
+        }
+      }
+
       @media (max-width: 768px) {
         .game-content {
           padding: 1rem;
         }
 
         .narrative-box {
-          padding: 2rem;
+          padding: 1.8rem;
         }
 
         .choices-section {
@@ -504,30 +549,68 @@
         }
 
         .choice-btn {
-          min-width: 280px;
-          padding: 1.5rem 2rem;
-          font-size: 1.1rem;
+          min-width: 260px;
+          padding: 1.4rem 1.8rem;
+          font-size: 1.05rem;
         }
 
         .ai-core-center {
-          width: 200px;
-          height: 200px;
+          width: 180px;
+          height: 180px;
+        }
+        
+        .narrative-text {
+          font-size: clamp(1.1rem, 2.5vw, 1.3rem);
         }
       }
 
       @media (max-width: 480px) {
         .narrative-box {
-          padding: 1.5rem;
+          padding: 1.3rem;
         }
 
         .choice-btn {
-          min-width: 250px;
-          padding: 1.2rem 1.5rem;
-          font-size: 1rem;
+          min-width: 240px;
+          padding: 1.1rem 1.4rem;
+          font-size: 0.95rem;
         }
 
         .choice-label {
-          font-size: 2rem;
+          font-size: 1.8rem;
+        }
+
+        .ai-core-center {
+          width: 150px;
+          height: 150px;
+        }
+        
+        .narrative-text {
+          font-size: clamp(1rem, 2.5vw, 1.2rem);
+        }
+      }
+      
+      @media (max-width: 320px) {
+        .narrative-box {
+          padding: 1rem;
+        }
+
+        .choice-btn {
+          min-width: 200px;
+          padding: 0.9rem 1.1rem;
+          font-size: 0.9rem;
+        }
+
+        .choice-label {
+          font-size: 1.5rem;
+        }
+
+        .ai-core-center {
+          width: 120px;
+          height: 120px;
+        }
+        
+        .narrative-text {
+          font-size: clamp(0.9rem, 2.5vw, 1.1rem);
         }
       }
     </style>

@@ -9,6 +9,10 @@
       rel="stylesheet"
     />
     <style>
+      html {
+        font-size: 16px;
+      }
+
       body {
         box-sizing: border-box;
       }
@@ -17,6 +21,12 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+      }
+
+      /* General responsive adjustments */
+      img, svg, video, canvas, iframe, object, embed {
+        max-width: 100%;
+        height: auto;
       }
 
       body {
@@ -32,7 +42,7 @@
       .game-scene {
         position: relative;
         width: 100vw;
-        height: 100vh;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -258,8 +268,9 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 100vh;
+        min-height: 100vh;
         padding: 2rem;
+        width: 100%;
       }
 
       /* Agent Status */
@@ -308,6 +319,8 @@
         justify-content: center;
         text-align: center;
         padding: 2rem 0;
+        min-height: 0; /* Allows scrolling when content overflows */
+        overflow: auto;
       }
 
       .narrative-box {
@@ -365,6 +378,8 @@
         gap: 2rem;
         padding: 2rem 0;
         flex-wrap: wrap;
+        width: 100%;
+        margin: 0 auto;
       }
 
       .choice-btn {
@@ -383,7 +398,12 @@
         text-decoration: none;
         display: inline-block;
         min-width: 250px;
+        min-height: 70px;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
 
       .choice-btn::before {
@@ -504,13 +524,27 @@
       }
 
       /* Responsive Design */
+      @media (max-width: 1024px) {
+        .game-content {
+          padding: 1.5rem;
+        }
+
+        .narrative-box {
+          padding: 2.5rem;
+        }
+
+        .choices-section {
+          gap: 1.8rem;
+        }
+      }
+
       @media (max-width: 768px) {
         .game-content {
           padding: 1rem;
         }
 
         .narrative-box {
-          padding: 2rem;
+          padding: 1.8rem;
         }
 
         .choices-section {
@@ -532,20 +566,51 @@
           margin-bottom: 1rem;
           max-width: 100%;
         }
+        
+        .firewall-display {
+          width: 150px;
+          height: 150px;
+        }
       }
 
       @media (max-width: 480px) {
         .narrative-box {
-          padding: 1.5rem;
+          padding: 1.3rem;
         }
 
         .choice-btn {
           min-width: 200px;
           padding: 1rem 1.2rem;
+          font-size: 0.95rem;
         }
 
         .server-rack {
           width: 60px;
+        }
+        
+        .firewall-display {
+          width: 120px;
+          height: 120px;
+        }
+        
+        .narrative-text {
+          font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+        }
+      }
+      
+      @media (max-width: 320px) {
+        .narrative-box {
+          padding: 1rem;
+        }
+
+        .choice-btn {
+          min-width: 180px;
+          padding: 0.9rem 1rem;
+          font-size: 0.9rem;
+        }
+        
+        .narrative-text {
+          font-size: clamp(0.9rem, 2.5vw, 1rem);
         }
       }
     </style>

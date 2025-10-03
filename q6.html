@@ -9,6 +9,10 @@
       rel="stylesheet"
     />
     <style>
+      html {
+        font-size: 16px;
+      }
+
       body {
         box-sizing: border-box;
       }
@@ -17,6 +21,12 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+      }
+
+      /* General responsive adjustments */
+      img, svg, video, canvas, iframe, object, embed {
+        max-width: 100%;
+        height: auto;
       }
 
       body {
@@ -298,6 +308,11 @@
         box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2),
           inset 0 0 20px rgba(255, 255, 255, 0.1);
         animation: buttonReady 3s ease-in-out infinite alternate;
+        min-height: 70px;
+        min-width: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       @keyframes buttonReady {
@@ -440,6 +455,27 @@
       }
 
       /* Responsive Design */
+      @media (max-width: 1024px) {
+        .success-content {
+          padding: 1.5rem;
+        }
+
+        .mission-successful {
+          letter-spacing: 4px;
+          margin-bottom: 2.5rem;
+        }
+
+        .victory-narrative {
+          margin-bottom: 3.5rem;
+          padding: 1.8rem;
+        }
+
+        .play-again-btn {
+          padding: 1.6rem 3.2rem;
+          font-size: 1.25rem;
+        }
+      }
+
       @media (max-width: 768px) {
         .success-content {
           padding: 1rem;
@@ -452,12 +488,12 @@
 
         .victory-narrative {
           margin-bottom: 3rem;
-          padding: 1.5rem;
+          padding: 1.4rem;
         }
 
         .play-again-btn {
-          padding: 1.5rem 3rem;
-          font-size: 1.2rem;
+          padding: 1.3rem 2.5rem;
+          font-size: 1.1rem;
         }
 
         .success-indicators {
@@ -469,22 +505,45 @@
       }
 
       @media (max-width: 480px) {
+        .success-content {
+          padding: 0.8rem;
+        }
+
         .mission-successful {
           letter-spacing: 2px;
+          font-size: clamp(2.2rem, 8vw, 3rem);
         }
 
         .victory-narrative {
+          font-size: clamp(1.1rem, 3vw, 1.5rem);
           padding: 1rem;
+          margin-bottom: 2.5rem;
         }
 
         .play-again-btn {
-          padding: 1.2rem 2rem;
-          font-size: 1rem;
+          padding: 1rem 1.8rem;
+          font-size: 0.95rem;
+          min-height: 55px;
         }
 
         .success-indicators {
           flex-direction: column;
           align-items: center;
+        }
+      }
+      
+      @media (max-width: 320px) {
+        .mission-successful {
+          font-size: clamp(2rem, 8vw, 2.5rem);
+        }
+
+        .victory-narrative {
+          font-size: clamp(1rem, 3vw, 1.3rem);
+        }
+
+        .play-again-btn {
+          padding: 0.9rem 1.5rem;
+          font-size: 0.9rem;
         }
       }
     </style>

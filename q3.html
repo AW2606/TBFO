@@ -9,6 +9,10 @@
       rel="stylesheet"
     />
     <style>
+      html {
+        font-size: 16px;
+      }
+
       body {
         box-sizing: border-box;
       }
@@ -17,6 +21,12 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+      }
+
+      /* General responsive adjustments */
+      img, svg, video, canvas, iframe, object, embed {
+        max-width: 100%;
+        height: auto;
       }
 
       body {
@@ -379,6 +389,11 @@
         box-shadow: 0 0 30px rgba(0, 255, 255, 0.6),
           inset 0 0 30px rgba(0, 255, 255, 0.1);
         animation: singleButtonPulse 2s infinite;
+        min-height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
 
       @keyframes singleButtonPulse {
@@ -464,18 +479,33 @@
       }
 
       /* Responsive Design */
+      @media (max-width: 1024px) {
+        .game-content {
+          padding: 1.5rem;
+        }
+
+        .narrative-box {
+          padding: 2.5rem;
+        }
+
+        .single-choice-btn {
+          padding: 1.8rem 3rem;
+          font-size: 1.3rem;
+        }
+      }
+
       @media (max-width: 768px) {
         .game-content {
           padding: 1rem;
         }
 
         .narrative-box {
-          padding: 2rem;
+          padding: 1.8rem;
         }
 
         .single-choice-btn {
           padding: 1.5rem 2.5rem;
-          font-size: 1.2rem;
+          font-size: 1.1rem;
         }
 
         .backdoor-indicator {
@@ -483,26 +513,57 @@
         }
 
         .backdoor-text {
-          font-size: 0.9rem;
+          font-size: 0.85rem;
         }
       }
 
       @media (max-width: 480px) {
         .narrative-box {
-          padding: 1.5rem;
+          padding: 1.3rem;
         }
 
         .single-choice-btn {
-          padding: 1.2rem 2rem;
-          font-size: 1rem;
+          padding: 1.1rem 1.8rem;
+          font-size: 0.95rem;
         }
 
         .choice-label {
-          font-size: 2rem;
+          font-size: 1.8rem;
+        }
+
+        .choice-text {
+          font-size: 1rem;
         }
 
         .server-rack {
-          width: 60px;
+          width: 50px;
+        }
+        
+        .narrative-text {
+          font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+        }
+      }
+      
+      @media (max-width: 320px) {
+        .narrative-box {
+          padding: 1rem;
+        }
+
+        .single-choice-btn {
+          padding: 0.9rem 1.5rem;
+          font-size: 0.9rem;
+        }
+
+        .choice-label {
+          font-size: 1.5rem;
+        }
+
+        .server-rack {
+          width: 40px;
+        }
+        
+        .narrative-text {
+          font-size: clamp(0.9rem, 2.5vw, 1rem);
         }
       }
     </style>
